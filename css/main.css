@@ -1,0 +1,157 @@
+body {
+	background-color: #000000;
+	margin: 0px;
+	overflow: hidden;
+	font-family: monospace;
+	color: #fff;
+}
+
+#info {
+	position: absolute;
+	top: 5%;
+	left: 5%; 
+	width: 20%;
+	background: rgba(255, 128, 0, .75);
+	color: #ffffff;
+	padding: 10px;
+	margin: 0;
+}
+
+#info h1 {
+	font-weight: bold;
+	font-size: 2.5em;
+}
+
+#info h2 {
+	font-size: 1.5em;
+}
+
+#info ul {
+	margin: 10px;
+	font-size: 1.5em;
+}
+
+#info li {
+	padding: 0 0 0 5px;
+}
+
+#info a {
+	text-decoration: none;
+}
+
+#info a.active {
+	font-weight: bold;
+}
+
+#info li:hover {
+	background-color: #ff3300;
+}
+
+a {
+	color: #ffffff;
+}
+
+#loading { 
+	position: absolute;
+	left: 0;
+	top: 30%;
+	width: 100%;
+}
+
+#loading p {
+	text-align: center;
+	margin: 1em 0;
+	padding: 0 0 0 24px;
+	font-size: 3em;
+}
+
+/* LOADING ANIMATION */
+
+#bowlG{
+position:relative;
+width:128px;
+height:128px;
+margin: 0 auto;
+}
+
+#bowl_ringG{
+position:absolute;
+width:128px;
+height:128px;
+border:11px solid #ffffff;
+-moz-border-radius:128px;
+-webkit-border-radius:128px;
+border-radius:128px;
+}
+
+.ball_holderG{
+position:absolute;
+width:34px;
+height:128px;
+left:47px;
+top:0px;
+-webkit-animation-name:ball_moveG;
+-webkit-animation-duration:1.8s;
+-webkit-animation-iteration-count:infinite;
+-webkit-animation-timing-function:linear;
+-moz-animation-name:ball_moveG;
+-moz-animation-duration:1.8s;
+-moz-animation-iteration-count:infinite;
+-moz-animation-timing-function:linear;
+-o-animation-name:ball_moveG;
+-o-animation-duration:1.8s;
+-o-animation-iteration-count:infinite;
+-o-animation-timing-function:linear;
+-ms-animation-name:ball_moveG;
+-ms-animation-duration:1.8s;
+-ms-animation-iteration-count:infinite;
+-ms-animation-timing-function:linear;
+}
+
+.ballG{
+position:absolute;
+left:0px;
+top:-30px;
+width:51px;
+height:51px;
+background:#ff6600;
+-moz-border-radius:43px;
+-webkit-border-radius:43px;
+border-radius:43px;
+}
+
+@-webkit-keyframes ball_moveG{
+0%{
+-webkit-transform:rotate(0deg)}
+
+100%{
+-webkit-transform:rotate(360deg)}
+
+}
+
+@-moz-keyframes ball_moveG{
+0%{
+-moz-transform:rotate(0deg)}
+
+100%{
+-moz-transform:rotate(360deg)}
+
+}
+
+@-o-keyframes ball_moveG{
+0%{
+-o-transform:rotate(0deg)}
+
+100%{
+-o-transform:rotate(360deg)}
+
+}
+
+@-ms-keyframes ball_moveG{
+0%{
+-ms-transform:rotate(0deg)}
+
+100%{
+-ms-transform:rotate(360deg)}
+
+}
