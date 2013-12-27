@@ -139,6 +139,8 @@ function init() {
 	mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
 	mesh.scale.x = -1;
 	scene.add( mesh );
+	var light = new THREE.AmbientLight( 0xffeeee ); // soft white light
+	//scene.add( light );
 
 	// displays current and past frames per second attained by scene
 	stats = new Stats();
