@@ -17,6 +17,7 @@ $(document).ready(function() {
 
 	}, 1000 / 30 );
 
+	// Video Nav Functions
 	$(".videoNav a").click(function(e) {
 		e.preventDefault();
 		video.src = $(this).attr('href');
@@ -25,6 +26,17 @@ $(document).ready(function() {
 		$(".videoNav a.active").removeClass("active");
 		$(this).addClass("active");
 	})
+
+	// About area close/open scripts
+	$(".about .aboutClose").click(function(e) {
+		e.preventDefault();
+		$(".about").slideUp();
+	});
+
+	$(".aboutOpen").click(function(e) {
+		e.preventDefault();
+		$(".about").slideDown();
+	});
 
 	init();
 	animate();

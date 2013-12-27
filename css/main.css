@@ -29,6 +29,7 @@ body {
 #info ul {
 	margin: 10px;
 	font-size: 1.5em;
+	display: none;
 }
 
 #info li {
@@ -49,6 +50,36 @@ body {
 
 a {
 	color: #ffffff;
+}
+
+/* ABOUT */
+.about {
+	display: none;
+	position: absolute;
+	z-index: 3000;
+	top: 0;
+	width: 40%;
+	right: 10%;
+	top: 10%;
+	background-color: rgba(0,0,0,.5);
+	padding: 1em;
+	box-sizing: border-box;
+	height: 50%;
+	overflow: auto;
+}
+
+.percentLoaded {
+	margin: 10px 0;
+}
+
+.about p {
+	margin: 1em 0;
+	line-height: 1.25em;
+}
+
+h3 {
+	font-size: 2em;
+	font-weight: bold;
 }
 
 #loading { 
