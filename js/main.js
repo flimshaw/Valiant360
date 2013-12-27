@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 window.app = {};
 
-var camera, scene, renderer;
+var camera, scene, renderer, stats;
 
 var video, texture;
 
@@ -137,6 +137,13 @@ function init() {
 	mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
 	mesh.scale.x = -1;
 	scene.add( mesh );
+
+	// displays current and past frames per second attained by scene
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
 
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -239,7 +246,10 @@ function animate() {
 
 		}		
 	} else {
-		texture.needsUpdate = true;
+		if(!video.paused) {
+			texture.needsUpdate = true;
+		}
+		
 	}
 
 	render();
@@ -262,7 +272,7 @@ function render() {
 	camera.position.x = - cx;
 	camera.position.y = - cy;
 	camera.position.z = - cz;
-
+	stats.update();
 	renderer.render( scene, camera );
 
 }
