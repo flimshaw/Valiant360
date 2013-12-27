@@ -119,8 +119,6 @@ function init() {
 		video.play();
 	});
 
-
-
 	// DEBUG
 	window.v = video;
 
@@ -131,10 +129,12 @@ function init() {
 	container.appendChild( renderer.domElement );
 
 	texture = new THREE.Texture( video );
+	texture.generateMipmaps = false;
+
 	texture.minFilter = THREE.LinearFilter;
 	texture.magFilter = THREE.LinearFilter;
 	//texture.anistropy = 4;
-	texture.format = THREE.LuminanceFormat;
+	texture.format = THREE.RGBFormat;
 
 	mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
 	mesh.scale.x = -1;
@@ -173,7 +173,7 @@ function onDocumentMouseMove( event ) {
 	onPointerDownLat = lat;
 	if ( 1 ) {
 
-		lon = ( event.clientX / window.innerWidth ) * 430 - 45
+		lon = ( event.clientX / window.innerWidth ) * 430 - 225
 		lat = ( event.clientY / window.innerHeight ) * -180 + 90
 
 	}
