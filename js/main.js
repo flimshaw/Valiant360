@@ -1,23 +1,5 @@
 $(document).ready(function() {
 
-	var ldr = $("#loading");
-	ldr.data("isLoading", true);
-
-
-	setInterval( function() {
-
-		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-			
-			texture.needsUpdate = true;
-			if(ldr.data("isLoading") == true) {
-				ldr.fadeOut('fast');
-				ldr.data("isLoading", false);
-			}
-
-		}
-
-	}, 1000 / 30 );
-
 	// Video Nav Functions
 	$(".videoNav a").click(function(e) {
 		e.preventDefault();
@@ -86,7 +68,8 @@ onMouseDownMouseX = 0, onMouseDownMouseY = 0,
 lon = 0, onMouseDownLon = 0,
 lat = 45, onMouseDownLat = 0,
 phi = 0, theta = 0;
-
+var ldr;
+var videoStarted = false;
 
 
 function init() {
@@ -234,6 +217,31 @@ function onDocumentMouseWheel( event ) {
 function animate() {
 
 	requestAnimationFrame( animate );
+
+	// run this the first time we play the video TODO: FIX THIS SO IT DOESN'T RUN ON EVERY DAMN FRAME
+	if(!videoStarted) {
+
+		if($("#loading").length > 0) {
+
+			ldr = $("#loading");
+			ldr.data("isLoading", true);
+
+		}
+
+		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+
+			if(ldr.data("isLoading") == true) {
+				ldr.fadeOut('fast');
+				ldr.data("isLoading", false);
+			}
+
+			videoStarted = true;
+
+		}		
+	} else {
+		texture.needsUpdate = true;
+	}
+
 	render();
 
 }
