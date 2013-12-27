@@ -4,6 +4,7 @@
 		<title>Valiant by Charlie Hoey</title>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/fontello.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css" />
 
 	</head>
@@ -28,23 +29,31 @@
 		<div id="info">
 
 			<h1>Valiant</h1>
-			<h2>by Charlie Hoey</h2>
+			<h2>by <a href="http://charliehoey.com/">Charlie Hoey</a></h2>
 
 			<p class="moreInfo"><a href="#" class="aboutOpen">&gt; More Info</a></p>
 			
 			<ul class="videoNav">
+				<li><a href="videos/overpass-2k.mp4">Reno</a></li>
 				<li><a href="videos/overpass-full-res.mp4">Reno</a></li>
 			</ul>
 
+				<div class="controls">
+					<a href="#" class="playButton active"><i class="icon-play"></i></a>
+					<a href="#" class="pauseButton"><i class="icon-pause"></i></a>
+					<a href="#" class="muteButton"><i class="icon-volume-off"></i></a>
+				</div>
+
 			<div class="percentLoaded">
-				<strong class="pct"></strong>
+				<strong class="pct">Initializing...</strong>
+
 			</div>
 
 		</div>
 			
 			<div class="about">
 				
-			<a href="#" class="aboutClose">X</a>
+			<a href="#" class="aboutClose">X CLOSE</a>
 
 			<h3>Project Valiant</h3>
 
@@ -61,11 +70,18 @@
 			</div>
 		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="js/Three.js"></script>
-		<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
-		<script type="text/javascript" src="js/modernizr.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+		  ga('create', 'UA-608903-14', 'flimshaw.net');
+		  ga('send', 'pageview');
+
+		</script>
 
 		</script>
 	</body>

@@ -72,8 +72,32 @@ canvas {
 	cursor: crosshair;
 }
 
+.controls {
+	font-size: 1.5em;
+	position: absolute;
+	padding: 10px 0 0 0;
+	right: .5em;
+	top: 2.75em;
+}
+
+.controls i {
+	color: #fff;
+}
+
+.controls i:hover {
+	color: #ccc;
+}
+
+.controls .active i {
+	color: #c00;
+}
+
 .percentLoaded {
-	margin: 10px 0;
+	background-color:rgba(0,0,0,.5);
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding: 10px 5px;
 }
 
 .about p {
@@ -84,8 +108,20 @@ canvas {
 .moreInfo a {
 	display: block;
 	margin: 10px 0 0 0;
-	color: #ccf;
+	color: #04f;
 	font-size: 1em;
+}
+
+.moreInfo a:hover {
+	color: #38f;
+}
+
+.aboutClose {
+	background-color: rgba(0,0,0,.5);
+	padding: 5px;
+	text-decoration: none;
+	position: absolute;
+	right: 10px;
 }
 
 h3 {

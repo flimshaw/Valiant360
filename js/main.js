@@ -3,10 +3,11 @@ $(document).ready(function() {
 	var ldr = $("#loading");
 	ldr.data("isLoading", true);
 
+
 	setInterval( function() {
 
 		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-
+			
 			texture.needsUpdate = true;
 			if(ldr.data("isLoading") == true) {
 				ldr.fadeOut('fast');
@@ -21,7 +22,7 @@ $(document).ready(function() {
 	$(".videoNav a").click(function(e) {
 		e.preventDefault();
 		video.src = $(this).attr('href');
-		video.muted = true;
+		//video.muted = true;
 		
 		$(".videoNav a.active").removeClass("active");
 		$(this).addClass("active");
@@ -38,7 +39,32 @@ $(document).ready(function() {
 		$(".about").slideDown();
 	});
 
+	// Video Controls Functions
+	$(".playButton").click(function(e) {
+		video.play();
+		$(".pauseButton").removeClass('active');
+		$(".playButton").addClass('active');
+		e.preventDefault();
+	});
 
+	$(".pauseButton").click(function(e) {
+		video.pause();
+		$(".pauseButton").addClass('active');
+		$(".playButton").removeClass('active');		
+		e.preventDefault();
+	});
+
+	$(".muteButton").click(function(e) {
+		video.muted = video.muted == false;
+		if(video.muted) {
+			$(".muteButton i").removeClass('icon-volume-high');
+			$(".muteButton i").addClass('icon-volume-off');
+		} else {
+			$(".muteButton i").addClass('icon-volume-high');
+			$(".muteButton i").removeClass('icon-volume-off');
+		}
+		e.preventDefault();
+	});
 
 	init();
 	animate();
@@ -51,14 +77,14 @@ var camera, scene, renderer;
 
 var video, texture;
 
-var fov = 50,
+var fov = 36,
 texture_placeholder,
 isUserInteracting = false,
 
 // GLOBALS FOR TRACKING MOUSE
 onMouseDownMouseX = 0, onMouseDownMouseY = 0,
 lon = 0, onMouseDownLon = 0,
-lat = -90, onMouseDownLat = 0,
+lat = 45, onMouseDownLat = 0,
 phi = 0, theta = 0;
 
 
@@ -68,13 +94,19 @@ function init() {
 	var container, mesh;
 
 	container = document.getElementById( 'container' );
-
-	camera = new THREE.Camera( fov, window.innerWidth / window.innerHeight, 1, 1100 );
-
 	scene = new THREE.Scene();
+	camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, .1, 1000 );
 
 	video = document.createElement( 'video' );
 	video.loop = "loop";
+	video.muted = true;
+
+	// Report video load complete
+	video.addEventListener("ended", function(e) {
+		$(".pct").text("100% loaded.");
+		// DEBUG
+		console.log("done");
+	});
 
 	// Progress Meter
 	video.addEventListener("progress", function(e) {
@@ -90,7 +122,13 @@ function init() {
 		        percent = video.bufferedBytes / video.bytesTotal;
 		    }
 
-		$(".pct").text(Math.floor(percent * 100) + "% loaded.");
+		   	var cpct = Math.round(percent * 100);
+		   	if(cpct == 100) {
+		   		$(".percentLoaded").fadeOut();
+		   	} else {
+		   		$(".pct").text(cpct + "% loaded.");
+		   	}
+		
 	});
 
 	// Video Play Listener, fires after video loads
@@ -98,17 +136,16 @@ function init() {
 		video.play();
 	});
 
-	// Report video load complete
-	video.addEventListener("ended", function(e) {
-		$(".pct").text("100% loaded.");
-		// DEBUG
-		console.log("done");
-	});
+
 
 	// DEBUG
 	window.v = video;
 
 	video.src = $(".videoNav li:first-child a").attr("href");			
+
+	renderer = new THREE.WebGLRenderer();
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	container.appendChild( renderer.domElement );
 
 	texture = new THREE.Texture( video );
 	texture.minFilter = THREE.LinearFilter;
@@ -116,12 +153,7 @@ function init() {
 
 	mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
 	mesh.scale.x = -1;
-	scene.addObject( mesh );
-
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize( window.innerWidth, window.innerHeight );
-
-	container.appendChild( renderer.domElement );
+	scene.add( mesh );
 
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -149,7 +181,7 @@ function onDocumentMouseMove( event ) {
 	onPointerDownLat = lat;
 	if ( 1 ) {
 
-		lon = ( event.clientX / window.innerWidth ) * 360
+		lon = ( event.clientX / window.innerWidth ) * 430 - 45
 		lat = ( event.clientY / window.innerHeight ) * -180 + 90
 
 	}
@@ -163,17 +195,19 @@ function onDocumentMouseUp( event ) {
 
 function onDocumentMouseWheel( event ) {
 
+	var wheelSpeed = -.01;
+
 	// WebKit
 
 	if ( event.wheelDeltaY ) {
 
-		fov -= event.wheelDeltaY * 0.05;
+		fov -= event.wheelDeltaY * wheelSpeed;
 
 	// Opera / Explorer 9
 
 	} else if ( event.wheelDelta ) {
 
-		fov -= event.wheelDelta * 0.05;
+		fov -= event.wheelDelta * wheelSpeed;
 
 	// Firefox
 
@@ -183,8 +217,8 @@ function onDocumentMouseWheel( event ) {
 
 	}
 
-	var fovMin = 10;
-	var fovMax = 145;
+	var fovMin = 3;
+	var fovMax = 100;
 
 	if(fov < fovMin) {
 		fov = fovMin;
@@ -192,8 +226,8 @@ function onDocumentMouseWheel( event ) {
 		fov = fovMax;
 	}
 
-	camera.projectionMatrix = THREE.Matrix4.makePerspective( fov, window.innerWidth / window.innerHeight, 1, 1100 );
-	render();
+	camera.setLens(fov)
+	//render();
 
 }
 
@@ -210,14 +244,16 @@ function render() {
 	phi = ( 90 - lat ) * Math.PI / 180;
 	theta = lon * Math.PI / 180;
 
-	camera.target.position.x = 500 * Math.sin( phi ) * Math.cos( theta );
-	camera.target.position.y = 500 * Math.cos( phi );
-	camera.target.position.z = 500 * Math.sin( phi ) * Math.sin( theta );
+	var cx = 500 * Math.sin( phi ) * Math.cos( theta );
+	var cy = 500 * Math.cos( phi );
+	var cz = 500 * Math.sin( phi ) * Math.sin( theta );
+
+	camera.lookAt(new THREE.Vector3(cx, cy, cz));
 
 	// distortion
-	camera.position.x = - camera.target.position.x;
-	camera.position.y = - camera.target.position.y;
-	camera.position.z = - camera.target.position.z;
+	camera.position.x = - cx;
+	camera.position.y = - cy;
+	camera.position.z = - cz;
 
 	renderer.render( scene, camera );
 

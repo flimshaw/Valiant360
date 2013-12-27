@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2013 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="volume-off" unicode="&#xe800;" d="m766 730q15-15 15-36t-15-36l-141-142l0-447q0-54-29-84t-68-30q-35 0-70 24l-139 92q-36 25-99 40l-131-131q-15-15-36-15q-23 0-38 15t-15 37t15 37l80 80q-42 17-69 57t-26 87l0 103q0 65 46 111t110 46q37 0 85 14t78 34l139 93q35 24 70 24q58 0 83-53l82 80q15 15 36 15t37-15z m-251-137l-99-65l0-110l105 105l0 67q0 1-1 4l0 2q-2-2-5-3z m-411-212l0-103q0-22 15-37t37-16q27 0 62-6l147 147l0 127q-44-25-103-42t-106-17q-21 0-37-16t-15-37z m172-177q50-15 89-39l0 128z m244-141l0 2q1 3 1 4l0 380l-105-104l0-214l99-65q3-1 5-3z" horiz-adv-x="781" />
+<glyph glyph-name="volume-high" unicode="&#xe801;" d="m766 492q59-59 59-142q0-81-59-140q-16-16-37-16q-20 0-36 16q-15 15-15 37t15 36q27 27 27 67t-27 68q-15 15-15 37t15 37t36 15t37-15z m104 103q101-101 101-243q0-145-101-247q-15-15-36-15q-23 0-38 15t-15 37t15 37q70 70 70 172t-70 172q-15 15-15 36t15 36t37 15t37-15z m104 105q145-142 145-348q0-205-145-350q-15-15-36-15t-37 15t-15 36t15 37q114 114 114 277q0 161-114 275q-15 15-15 36t14 37t37 15t37-15z m-446 24q38 0 68-29t29-83l0-522q0-53-29-83t-68-31q-35 0-70 24l-139 93q-29 20-78 35t-85 15q-65 0-110 45t-46 111l0 104q0 65 46 110t110 46q37 0 85 14t78 35l139 92q35 24 70 24z m-372-477q47 0 106-18t103-42l0 327q-44-25-103-42t-106-17q-21 0-37-15t-15-37l0-104q0-21 15-37t37-15z m365-157l0 522q0 1-1 3l0 3q-2-3-5-4l-99-65l0-396l99-65q3-1 5-4l0 3q1 2 1 3z" horiz-adv-x="1119" />
+<glyph glyph-name="play" unicode="&#xe802;" d="m178 15q-30-30-74-30q-43 0-73 31t-31 74l0 520q0 44 31 74t73 31q44 0 74-30l343-335q-206-201-343-335z" horiz-adv-x="521" />
+<glyph glyph-name="pause" unicode="&#xe803;" d="m104 663q44 0 74-31t31-73l0-418q0-42-31-73t-74-31t-74 30t-30 74l0 418q0 44 30 74t74 30z m365 0q44 0 74-30t30-74l0-418q0-43-30-73t-74-30t-74 30t-30 73l0 418q0 44 30 74t74 30z" horiz-adv-x="573" />
+</font>
+</defs>
+</svg>
