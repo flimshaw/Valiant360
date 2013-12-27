@@ -149,10 +149,8 @@ function onDocumentMouseMove( event ) {
 	onPointerDownLat = lat;
 	if ( 1 ) {
 
-		lon = ( event.clientX ) * 0.25
-		lat = ( event.clientY ) * -0.25 + 100
-
-		console.log(lon)
+		lon = ( event.clientX / window.innerWidth ) * 360
+		lat = ( event.clientY / window.innerHeight ) * -180 + 90
 
 	}
 }
@@ -188,7 +186,6 @@ function onDocumentMouseWheel( event ) {
 	var fovMin = 10;
 	var fovMax = 145;
 
-	console.log(fov);
 	if(fov < fovMin) {
 		fov = fovMin;
 	} else if(fov > fovMax) {
