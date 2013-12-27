@@ -133,6 +133,8 @@ function init() {
 	texture = new THREE.Texture( video );
 	texture.minFilter = THREE.LinearFilter;
 	texture.magFilter = THREE.LinearFilter;
+	//texture.anistropy = 4;
+	texture.format = THREE.LuminanceFormat;
 
 	mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
 	mesh.scale.x = -1;
