@@ -81,6 +81,13 @@ canvas {
 	line-height: 1.25em;
 }
 
+.moreInfo a {
+	display: block;
+	margin: 10px 0 0 0;
+	color: #ccf;
+	font-size: 1em;
+}
+
 h3 {
 	font-size: 2em;
 	font-weight: bold;
