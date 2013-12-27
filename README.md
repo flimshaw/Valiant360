@@ -7,7 +7,8 @@ A Panorama video player
 -- HOW TO SYNC FILES WITH SERVER
 rsync --progress --size-only -r videos/ charliehoey@charliehoey.com:~/valiant.flimshaw.net/videos
 
-
+-- Some ruminations on the amount of data going to the video card
+So, what we're trying to do is decompress a 3500x1500 video frame, convert it to a bitmap (3500*1500 = 5.25 million pixels * 24 bits)
 
 -- DEV LOG
 
