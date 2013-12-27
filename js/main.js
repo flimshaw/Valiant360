@@ -38,6 +38,8 @@ $(document).ready(function() {
 		$(".about").slideDown();
 	});
 
+
+
 	init();
 	animate();
 
@@ -49,9 +51,11 @@ var camera, scene, renderer;
 
 var video, texture;
 
-var fov = 110,
+var fov = 50,
 texture_placeholder,
 isUserInteracting = false,
+
+// GLOBALS FOR TRACKING MOUSE
 onMouseDownMouseX = 0, onMouseDownMouseY = 0,
 lon = 0, onMouseDownLon = 0,
 lat = -90, onMouseDownLat = 0,
@@ -72,6 +76,7 @@ function init() {
 	video = document.createElement( 'video' );
 	video.loop = "loop";
 
+	// Progress Meter
 	video.addEventListener("progress", function(e) {
 		var percent = null;
 		    if (video && video.buffered && video.buffered.length > 0 && video.buffered.end && video.duration) {
@@ -88,16 +93,21 @@ function init() {
 		$(".pct").text(Math.floor(percent * 100) + "% loaded.");
 	});
 
+	// Video Play Listener, fires after video loads
 	video.addEventListener("canplaythrough", function(e) {
 		video.play();
 	});
 
+	// Report video load complete
 	video.addEventListener("ended", function(e) {
 		$(".pct").text("100% loaded.");
+		// DEBUG
 		console.log("done");
 	});
 
+	// DEBUG
 	window.v = video;
+
 	video.src = $(".videoNav li:first-child a").attr("href");			
 
 	texture = new THREE.Texture( video );
@@ -127,20 +137,22 @@ function onDocumentMouseDown( event ) {
 
 	isUserInteracting = true;
 
-	onPointerDownPointerX = event.clientX;
-	onPointerDownPointerY = event.clientY;
 
-	onPointerDownLon = lon;
-	onPointerDownLat = lat;
 
 }
 
 function onDocumentMouseMove( event ) {
+	onPointerDownPointerX = event.clientX;
+	onPointerDownPointerY = -event.clientY;
 
-	if ( isUserInteracting ) {
+	onPointerDownLon = lon;
+	onPointerDownLat = lat;
+	if ( 1 ) {
 
-		lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
-		lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
+		lon = ( event.clientX ) * 0.25
+		lat = ( event.clientY ) * -0.25 + 100
+
+		console.log(lon)
 
 	}
 }
@@ -173,7 +185,15 @@ function onDocumentMouseWheel( event ) {
 
 	}
 
+	var fovMin = 10;
+	var fovMax = 145;
+
 	console.log(fov);
+	if(fov < fovMin) {
+		fov = fovMin;
+	} else if(fov > fovMax) {
+		fov = fovMax;
+	}
 
 	camera.projectionMatrix = THREE.Matrix4.makePerspective( fov, window.innerWidth / window.innerHeight, 1, 1100 );
 	render();

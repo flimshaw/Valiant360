@@ -68,6 +68,10 @@ a {
 	overflow: auto;
 }
 
+canvas {
+	cursor: crosshair;
+}
+
 .percentLoaded {
 	margin: 10px 0;
 }
