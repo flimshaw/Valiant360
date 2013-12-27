@@ -9,6 +9,7 @@
 	</head>
 	<body>
 
+		<!-- LOADING CSS3 SPINNER CONTAINER -->
 		<div id="loading">
 			<div id="bowlG">
 				<div id="bowl_ringG">
@@ -20,22 +21,41 @@
 			</div>
 			<p>loading</p>
 		</div>
+
+
 		<div id="container"></div> 
+		
 		<div id="info">
+
 			<h1>Valiant</h1>
 			<h2>by Charlie Hoey</h2>
+
+
 			<ul class="videoNav">
-				<li><a href="videos/thumbs-up.ogg" class="active">Thumbs Up!</a></li>
-				<li><a href="videos/girder-bridge.ogv">Bridge</a></li>
-				<li><a href="videos/toll-booth.ogv">Toll Booth</a></li>
-				<li><a href="videos/reno.ogv">Reno, Nevada</a></li>
-				<li><a href="videos/full-res-crop.mp4">Full Res</a></li>
+				<li><a href="videos/resized-pano.mp4">Resized Pano</a></li>
 			</ul>
+
 			<div class="percentLoaded">
 				<strong class="pct"></strong>
 			</div>
-		</div>
 
+		</div>
+			
+			<div class="about">
+				
+			<h3>Project Valiant</h3>
+
+			<p>In the summer of 2011, my friend Kat and I drove my 1964 Plymouth Valiant from San Francisco, CA to Boston, MA.  I attempted to film the entire thing with an array of GoPro cameras attached to the front windshield, capturing a nearly complete 360 degree sphere at nearly 4k, at 30fps, for <em>over 3500 miles</em>.</p>
+
+			<p>Some quick math, that's 58 hours at 60mph, so 210,000 seconds, 6.3 million frames, which is 31 trillion pixel values, or <em>743 trillion</em> 1's and 0's.  I think it prudent to pause here for a moment, reader, and quietly let that number sink in.  With consumer hardware, I was going to store 2500 times as many bits of information as there are stars in the Milky Way.  Maybe a stretch to try and relate the two, but the sheer volume of the data for this project was one of the things that attracted me to try and do it.  We're talking about rattling around America in an ancient convertible, capturing the sounds sights around us, and then magnetically etching them onto a handful of whirring silicon platters.  My word, the opportunities available to us in the modern world to experiment and create are staggering, fragile, and too oft taken for granted.  As you read this, take a moment to imagine the riot of copper, fiber optic, and radio transmissions that had to happen for you to be able to do so, not to mention the cluster of local energy sources being harvested right now, somewhere, powering the speakers and laptop and, I hope, a fridge full of your favorite foods and beverages.  We're lucky to be here, and there's plenty to do.</p>
+
+			<p>With 5 GoPros running, along with a GPS logger and a 4-channel field recorder, I was going through about 32.8gb per hour, onto 6 individual 32gb SD cards.  We'd drive for 5 hours and after it seemed like they'd be getting full, I'd pull over and swap all of them out for fresh ones, start the system back up again, do a clap sync, and drive. During the next leg, I had a script that would copy all the files from the SD card to my laptop's hard drive, with an md5 checksum varification, and then delete them from the card.  Pretty sweet, I was prepared with lots of redundancy for the video files I'd be pulling off the cameras.</p>
+
+			<p>However, camera troubles started at the end of the first day.  They'd report they were recording, and still report that they were recording at the end of a 5 hour drive, but when I got to my computer with the SD cards, they'd be corrupted with no data.  The first time it happened, I saved it and ran some file recovery software on it to see if maybe it was just a messed up header or file table or something, maybe there was something to salvage, but alas and alack, no luck.  By the time we were in Chicago, we hadn't had a single session that included all 5 cameras recording successfully since Utah.  So I gave up and we just had a sweet roadtrip and I vowed to come back to the video that did work anyways and see what came out.</p>
+
+			<p>I'm finally documenting and publishing the parts of the projet that worked, and perhaps working on an improved version.  <a href="http://twitter.com/flimshaw">Contact me on Twitter</a> if you like the project or want to know more.  I'm happy to answer questions, and will be trying to flesh the documentation out in coming weeks.</p>
+
+			</div>
 		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="js/Three.js"></script>
 		<script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
