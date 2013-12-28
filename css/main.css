@@ -61,7 +61,7 @@ a {
 	width: 40%;
 	right: 10%;
 	top: 10%;
-	background-color: rgba(0,0,0,.5);
+	background-color: rgba(0,0,0,.75);
 	padding: 1em;
 	box-sizing: border-box;
 	height: 50%;
@@ -77,7 +77,7 @@ canvas {
 	position: absolute;
 	padding: 10px 0 0 0;
 	right: .5em;
-	top: 2.75em;
+	bottom: 1em;
 }
 
 .controls i {
