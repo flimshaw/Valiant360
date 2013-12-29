@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # Simple script for processing individual cameras out to separate files from composited videos
 import subprocess, sys, re, os, glob, time
+from multiprocessing import Pool, Lock
 
 # GOAL
 # Basically, I want to export a section of video from Premiere, break it into individual frames, and stitch them together
@@ -19,14 +20,10 @@ cameraNames = ['front', 'right', 'rear', 'left', 'top']
 files = glob.glob('*.jpg')
 filename_regex = re.compile("(?P<project_name>[^0-9]+)(?P<frame_number>[0-9]+)\.jpg")
 
-for index, fileName in enumerate(files):
-	tic = time.clock()
+def splitFile(fileName):
 	matches = filename_regex.search(fileName)
 	frameNumber = matches.group('frame_number')
 	projectName = matches.group('project_name')
-
-	if index == 0:
-		subprocess.call('mkdir ./%s' % projectName, shell=True)
 
 	subprocess.call('mkdir ./%s/%s' % (projectName, frameNumber), shell=True)
 
@@ -37,7 +34,17 @@ for index, fileName in enumerate(files):
 
 		convertCmd = "convert -crop %sx%s+%s+%s ./%s ./%s/%s/%s.jpg" % (frameWidth, frameHeight, offsetX, offsetY, fileName, projectName, frameNumber, camera)
 		print "Converting: [[%s]]" % convertCmd
-		subprocess.call(convertCmd, shell=True)
+		tic = time.clock()
+		p = subprocess.Popen(convertCmd, shell=True)
+		if i == 4:
+			p.wait()
+	return 1
 
-	toc = time.clock()
-	print "Done in %s milliseconds" % (toc - tic)
+p = Pool(5)
+
+for index, fileName in enumerate(files):
+	if index == 0:
+		matches = filename_regex.search(fileName)
+		projectName = matches.group('project_name')
+		subprocess.call('mkdir ./%s' % (projectName), shell=True)
+	splitFile(fileName)
