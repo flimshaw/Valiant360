@@ -8,6 +8,7 @@ $(document).ready(function() {
 		$(".percentLoaded").fadeIn();
 		$(".videoNav a.active").removeClass("active");
 		$(this).addClass("active");
+		ga('send', 'event', "navClick", "VideoResolution", $(this).text());
 	})
 
 	// About area close/open scripts
@@ -18,6 +19,7 @@ $(document).ready(function() {
 
 	$(".aboutOpen").click(function(e) {
 		e.preventDefault();
+		ga('send', 'event', "navClick", "About");
 		$(".about").slideToggle();
 	});
 
@@ -26,13 +28,15 @@ $(document).ready(function() {
 		video.play();
 		$(".pauseButton").removeClass('active');
 		$(".playButton").addClass('active');
+		ga('send', 'event', "navClick", "Play");
 		e.preventDefault();
 	});
 
 	$(".pauseButton").click(function(e) {
 		video.pause();
 		$(".pauseButton").addClass('active');
-		$(".playButton").removeClass('active');		
+		$(".playButton").removeClass('active');
+		ga('send', 'event', "navClick", "Pause");
 		e.preventDefault();
 	});
 
@@ -45,6 +49,7 @@ $(document).ready(function() {
 			$(".muteButton i").addClass('glyphicon glyphicon-volume-up');
 			$(".muteButton i").removeClass('glyphicon-volume-off');
 		}
+		ga('send', 'event', "navClick", "Mute Toggle");
 		e.preventDefault();
 	});
 
