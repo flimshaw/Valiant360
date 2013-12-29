@@ -89,6 +89,12 @@ canvas {
 	right: 10px;
 }
 
+.twitter-share-button {
+	position: relative;
+	left: 10px;
+	bottom: 8px;
+}
+
 .aboutClose:hover {
 	color: #fff;
 }
