@@ -12,6 +12,10 @@ body {
 	z-index: 100;
 }
 
+canvas {
+	cursor: crosshair;
+}
+
 .menuHide {
 	display: none;
 }
