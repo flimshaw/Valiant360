@@ -1,39 +1,43 @@
 body {
-	background-color: #000000;
-	margin: 0px;
 	overflow: hidden;
-	font-family: monospace;
-	color: #fff;
+}
+
+#panoPlayer {
+	position: absolute;
+	z-index: 0;
+}
+
+.container {
+	position: relative;
+	z-index: 100;
+}
+
+.menuHide {
+	display: none;
 }
 
 #info {
-	position: absolute;
-	top: 5%;
-	left: 5%; 
-	width: 20%;
-	background: rgba(255, 128, 0, .75);
 	color: #ffffff;
-	padding: 10px;
-	margin: 0;
+	padding: 0;
+}
+
+#info .top {
+	background: rgba(255, 128, 0, .75);
+	overflow: hidden;
 }
 
 #info h1 {
 	font-weight: bold;
 	font-size: 2.5em;
+	margin: 0;
+	padding: 10px;
+	line-height: 1em;
 }
 
 #info h2 {
-	font-size: 1.5em;
-}
-
-#info ul {
-	margin: 10px;
-	font-size: 1.5em;
-}
-
-#info li {
-	padding: 0 0 0 5px;
-	font-size: .75em;
+	font-size: 1em;
+	margin: 0;
+	padding: 0 10px;
 }
 
 #info a {
@@ -48,72 +52,21 @@ body {
 	background-color: #ff3300;
 }
 
-a {
-	color: #ffffff;
-}
-
 /* ABOUT */
 .about {
 	display: none;
-	position: absolute;
 	z-index: 3000;
 	top: 0;
-	width: 40%;
-	right: 10%;
-	top: 10%;
 	background-color: rgba(0,0,0,.75);
 	padding: 1em;
 	box-sizing: border-box;
-	height: 50%;
-	overflow: auto;
+	height: 430px;
+	color: #ddd;
+	overflow: auto!important;
 }
 
-canvas {
-	cursor: crosshair;
-}
-
-.controls {
-	font-size: 1.5em;
-	position: absolute;
-	padding: 10px 0 0 0;
-	right: .5em;
-	bottom: 1em;
-}
-
-.controls i {
-	color: #fff;
-}
-
-.controls i:hover {
-	color: #ccc;
-}
-
-.controls .active i {
-	color: #c00;
-}
-
-.percentLoaded {
-	background-color:rgba(0,0,0,.5);
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	padding: 10px 5px;
-}
-
-.about p {
-	margin: 1em 0;
-	line-height: 1.25em;
-}
-
-.moreInfo a {
-	display: block;
-	margin: 10px 0 0 0;
-	color: #04f;
-	font-size: 1em;
-}
-
-.moreInfo a:hover {
-	color: #38f;
+.about h3 {
+	margin-top: 0;
 }
 
 .aboutClose {
@@ -121,115 +74,46 @@ canvas {
 	padding: 5px;
 	text-decoration: none;
 	position: absolute;
+	color: #fff;
 	right: 10px;
 }
 
-h3 {
-	font-size: 2em;
-	font-weight: bold;
+.aboutClose:hover {
+	color: #fff;
 }
 
-#loading { 
+.videoControls {
+	font-size: 1.5em;
 	position: absolute;
-	left: 0;
-	top: 30%;
-	width: 100%;
+	padding: 10px 0 0 0;
+	right: 20px;
+	top: 10px;
 }
 
-#loading p {
-	text-align: center;
-	margin: 1em 0;
-	padding: 0 0 0 24px;
-	font-size: 3em;
+.videoControls i {
+	color: #fff;
 }
 
-/* LOADING ANIMATION */
-
-#bowlG{
-position:relative;
-width:128px;
-height:128px;
-margin: 0 auto;
+.videoControls i:hover {
+	color: #ccc;
 }
 
-#bowl_ringG{
-position:absolute;
-width:128px;
-height:128px;
-border:11px solid #ffffff;
--moz-border-radius:128px;
--webkit-border-radius:128px;
-border-radius:128px;
+.videoControls .active i {
+	color: #c00;
 }
 
-.ball_holderG{
-position:absolute;
-width:34px;
-height:128px;
-left:47px;
-top:0px;
--webkit-animation-name:ball_moveG;
--webkit-animation-duration:1.8s;
--webkit-animation-iteration-count:infinite;
--webkit-animation-timing-function:linear;
--moz-animation-name:ball_moveG;
--moz-animation-duration:1.8s;
--moz-animation-iteration-count:infinite;
--moz-animation-timing-function:linear;
--o-animation-name:ball_moveG;
--o-animation-duration:1.8s;
--o-animation-iteration-count:infinite;
--o-animation-timing-function:linear;
--ms-animation-name:ball_moveG;
--ms-animation-duration:1.8s;
--ms-animation-iteration-count:infinite;
--ms-animation-timing-function:linear;
+.nav {
+	margin: 20px 0;
+	background-color: rgba(255, 255, 255, .25);
 }
 
-.ballG{
-position:absolute;
-left:0px;
-top:-30px;
-width:51px;
-height:51px;
-background:#ff6600;
--moz-border-radius:43px;
--webkit-border-radius:43px;
-border-radius:43px;
+.statusMessage {
+	background-color: rgba(100,100,100,.75);
+	color: #fff;
+	padding: 0 10px;
 }
 
-@-webkit-keyframes ball_moveG{
-0%{
--webkit-transform:rotate(0deg)}
 
-100%{
--webkit-transform:rotate(360deg)}
-
-}
-
-@-moz-keyframes ball_moveG{
-0%{
--moz-transform:rotate(0deg)}
-
-100%{
--moz-transform:rotate(360deg)}
-
-}
-
-@-o-keyframes ball_moveG{
-0%{
--o-transform:rotate(0deg)}
-
-100%{
--o-transform:rotate(360deg)}
-
-}
-
-@-ms-keyframes ball_moveG{
-0%{
--ms-transform:rotate(0deg)}
-
-100%{
--ms-transform:rotate(360deg)}
-
+#stats {
+	display: none;
 }

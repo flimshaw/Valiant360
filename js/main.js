@@ -5,7 +5,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		video.src = $(this).attr('href');
 		//video.muted = true;
-		
+		$(".percentLoaded").fadeIn();
 		$(".videoNav a.active").removeClass("active");
 		$(this).addClass("active");
 	})
@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 	$(".aboutOpen").click(function(e) {
 		e.preventDefault();
-		$(".about").slideDown();
+		$(".about").slideToggle();
 	});
 
 	// Video Controls Functions
@@ -39,14 +39,25 @@ $(document).ready(function() {
 	$(".muteButton").click(function(e) {
 		video.muted = video.muted == false;
 		if(video.muted) {
-			$(".muteButton i").removeClass('icon-volume-high');
-			$(".muteButton i").addClass('icon-volume-off');
+			$(".muteButton i").removeClass('glyphicon-volume-up');
+			$(".muteButton i").addClass('glyphicon glyphicon-volume-off');
 		} else {
-			$(".muteButton i").addClass('icon-volume-high');
-			$(".muteButton i").removeClass('icon-volume-off');
+			$(".muteButton i").addClass('glyphicon glyphicon-volume-up');
+			$(".muteButton i").removeClass('glyphicon-volume-off');
 		}
 		e.preventDefault();
 	});
+
+	$("#info").hover(
+		function(e) {
+			$(this).removeClass('closed').addClass('open');
+			$(this).find('.menuHide').show();
+		}, 
+		function(e) {
+			$(this).removeClass('open').addClass('closed');
+			$(this).find('.menuHide').hide();
+		}
+	);
 
 	init();
 	animate();
@@ -76,7 +87,7 @@ function init() {
 
 	var container, mesh;
 
-	container = document.getElementById( 'container' );
+	container = document.getElementById( 'panoPlayer' );
 	scene = new THREE.Scene();
 	camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, .1, 1000 );
 
@@ -107,7 +118,7 @@ function init() {
 
 		   	var cpct = Math.round(percent * 100);
 		   	if(cpct == 100) {
-		   		$(".percentLoaded").fadeOut();
+		   		$(".percentLoaded").fadeOut().addClass('fadedOut');
 		   	} else {
 		   		$(".pct").text(cpct + "% loaded.");
 		   	}
@@ -126,6 +137,7 @@ function init() {
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	console.log(window.innerHeight)
 	container.appendChild( renderer.domElement );
 
 	texture = new THREE.Texture( video );
@@ -145,9 +157,11 @@ function init() {
 	// displays current and past frames per second attained by scene
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.top = '10px';
+	stats.domElement.style.right = '40px';
 	stats.domElement.style.zIndex = 100;
 	container.appendChild( stats.domElement );
+	$(container).css({ height: window.innerHeight + 'px' });
 
 	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -232,20 +246,23 @@ function animate() {
 	// run this the first time we play the video TODO: FIX THIS SO IT DOESN'T RUN ON EVERY DAMN FRAME
 	if(!videoStarted) {
 
+		/*
 		if($("#loading").length > 0) {
 
 			ldr = $("#loading");
 			ldr.data("isLoading", true);
 
 		}
+		*/
 
 		if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
 
-			if(ldr.data("isLoading") == true) {
+
+/*			if(ldr.data("isLoading") == true) {
 				ldr.fadeOut('fast');
 				ldr.data("isLoading", false);
 			}
-
+*/
 			videoStarted = true;
 
 		}		

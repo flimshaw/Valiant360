@@ -34,10 +34,13 @@ def splitFile(fileName):
 
 		convertCmd = "convert -crop %sx%s+%s+%s ./%s ./%s/%s/%s.jpg" % (frameWidth, frameHeight, offsetX, offsetY, fileName, projectName, frameNumber, camera)
 		print "Converting: [[%s]]" % convertCmd
-		tic = time.clock()
+		
 		p = subprocess.Popen(convertCmd, shell=True)
 		if i == 4:
+			tic = time.clock()
 			p.wait()
+			toc = time.clock()
+			print "Done in %s" % (toc-tic)
 	return 1
 
 p = Pool(5)
