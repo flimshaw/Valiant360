@@ -1,6 +1,7 @@
 {
   "name": "valiant.flimshaw.net",
   "description": "site framework for playing valiant project videos in panorama",
+  "version": "0.0.1",
   "engines": {
     "node": ">= 0.10.0"
   },
