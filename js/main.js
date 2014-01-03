@@ -138,7 +138,7 @@ function init() {
 	// DEBUG
 	window.v = video;
 
-	video.src = $(".videoNav li a.active").attr("href");			
+	video.src = $(".videoNav a.active").attr("href");			
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
