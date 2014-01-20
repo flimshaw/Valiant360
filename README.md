@@ -2,11 +2,15 @@
 
 ### A browser-based video player for 360 degree panorama videos.
 
+#### 3rd party libraries and their licenses
+
+The following libraries are used in this tool's creation.
+
+JQuery 1.7.2 (MIT License)
+Three.js + stats (MIT License)
+Twitter Bootstrap (MIT License)
 
 
-
--- HOW TO SYNC FILES WITH SERVER
-rsync --progress --size-only -r videos/ charliehoey@charliehoey.com:~/valiant.flimshaw.net/videos
 
 -- Some ruminations on the amount of data going to the video card
 So, what we're trying to do is decompress a 3500x1500 video frame, convert it to a bitmap (3500*1500 = 5.25 million pixels * 24 bits)
