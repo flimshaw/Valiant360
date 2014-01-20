@@ -1,7 +1,8 @@
-PanoramaVideoPlayer
-===================
+# Valiant 360
 
-A Panorama video player
+### A browser-based video player for 360 degree panorama videos.
+
+
 
 
 -- HOW TO SYNC FILES WITH SERVER
