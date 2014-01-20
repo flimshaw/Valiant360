@@ -26,6 +26,7 @@ v.pause();
 
 
 ** JQuery **
+
 $("#videoPlayer").Valiant(); // instantiates player on video element, fills specified size with standard controls and mouse tracking
 $("#videoPlayer").Valiant().pause(); // pauses video etc etc
 
