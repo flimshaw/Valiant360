@@ -1,0 +1,17 @@
+application: flimshawpano
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /css
+  static_dir: css
+
+- url: /js
+  static_dir: js
+
+- url: /videos
+  static_dir: videos
+
+- url: /.*
+  script: main.py

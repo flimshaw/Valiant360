@@ -1,0 +1,125 @@
+<!-- 
+Valiant 360
+Copyright (c) 2014 Charlie Hoey
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Valiant 360 Pano Player</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+
+	</head>
+	<body>
+		
+		<div id="panoPlayer"></div>
+
+		<div class="container">
+
+			<div class="row">
+
+				<div id="info" class="col-md-5 col-lg-4 col-sm-12">
+
+					<div class="top">
+
+						<h1>Valiant</h1>
+
+						<div class="menuHide">
+
+							<h2>by <a href="http://twitter.com/flimshaw/">Charlie Hoey</a></h2>
+
+							<div class="videoControls">
+								<a href="#" class="playButton active"><i class="glyphicon glyphicon-play"></i></a>
+								<a href="#" class="pauseButton"><i class="glyphicon glyphicon-pause"></i></a>
+								<a href="#" class="muteButton"><i class="glyphicon glyphicon-volume-off"></i></a>
+							</div>
+
+							
+							
+							<div class="videoNav nav">
+								<a href="#" class="aboutOpen">About</a>
+								<h3>Locations</h3>
+								<div class="location">
+									<h4>Overpass</h4>
+									<div class="videos">
+										<a href="videos/overpass-.5k.mp4" data-tex-format="rgb" class="active">Low</a>
+										<a href="videos/overpass-2k.mp4" data-tex-format="rgb">High</a>
+										<a href="videos/overpass-full-res.mp4" data-tex-format="luminance">Full</a>
+									</div>
+								</div>
+							
+								<div class="location">
+									<h4>The Mission</h4>
+									<div class="videos">
+										<a href="videos/driving-in-the-mission-720.mp4" data-tex-format="rgb">Low</a>
+										<a href="videos/driving-in-the-mission-2k.mp4" data-tex-format="rgb">High</a>
+										<a href="videos/driving-in-the-mission-3.5k.mp4" data-tex-format="rgb">Full</a>
+									</div>
+								</div>
+									
+							</div>
+
+							<div class="social">
+							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://valiant.flimshaw.net" data-text="Project Valiant: 360 degree roadtrip video by Charlie Hoey" data-via="flimshaw" data-related="flimshaw">Tweet</a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+							</div>
+
+						</div>
+
+					</div>
+
+				<div class="percentLoaded statusMessage">
+					<strong class="pct">Initializing...</strong>
+				</div>					
+
+				</div>
+
+
+
+			<div class="about col-md-8">
+
+				<a href="#" class="aboutClose">X CLOSE</a>
+
+				<h3>Project Valiant</h3>
+
+				<p>In the summer of 2011, my friend Kat and I drove my 1964 Plymouth Valiant from San Francisco, CA to Boston, MA.  I attempted to film the entire thing with an array of GoPro cameras attached to the front windshield, capturing a nearly complete 360 degree sphere at nearly 4k, at 30fps, for <em>over 3500 miles</em>.</p>
+
+				<p>Some quick math, that's 58 hours at 60mph, so 210,000 seconds, 6.3 million frames, which is 31 trillion pixel values, or <em>743 trillion</em> 1's and 0's.  I think it prudent to pause here for a moment, reader, and quietly let that number sink in.  With consumer hardware, I was going to store 2500 times as many bits of information as there are stars in the Milky Way.  Maybe a stretch to try and relate the two, but the sheer volume of the data for this project was one of the things that attracted me to try and do it.  We're talking about rattling around America in an ancient convertible, capturing the sounds sights around us, and then magnetically etching them onto a handful of whirring silicon platters.  My word, the opportunities available to us in the modern world to experiment and create are staggering, fragile, and oft taken for granted.  Take a moment to imagine the riot of copper, fiber optic lines, and radio transmissions that had to happen for you to be able to read this, not to mention all of the materials being burned and converted to electricity somewhere far away, powering your speakers and laptop and, I hope, fridge full of your favorite foods and beverages.  We're lucky to be here, and there's plenty to do.</p>
+
+				<p>With 5 GoPros running, along with a GPS logger and a 4-channel field recorder, I was going through about 32.8gb per hour, onto 6 individual 32gb SD cards.  We'd drive for 5 hours, then I'd pull over and swap all of them out for fresh ones, start the camera rig back up again, do a clap sync, and drive. During the next leg, Kat would run a script on each card that would copy all its files to my laptop's hard drive, with an md5 checksum varification at the end, and then format the card so it's ready for the following leg.  This process took <em>just</em> less than 5 hours, so it all worked out.  Not a bad backup system all things considered.</p>
+
+				<p>Camera troubles, however, started at the end of the first day.  They'd report they were recording, and still report that they were recording at the end of a 5 hour drive, but when I got to my computer with the SD cards, they'd be corrupted with no data.  The first time it happened, I saved it and ran some file recovery software on it to see if maybe it was just a messed up header or file table or something, maybe there was something to salvage, but alas and alack, no luck.  By the time we were in Chicago, we hadn't had a single session that included all 5 cameras recording successfully since Utah.  So I gave up and we just had a sweet roadtrip and I vowed to come back to the video that did work anyways and see what came out.</p>
+
+				<p>I'm finally documenting and publishing the parts of the project that worked, and perhaps working on an improved version.  <a href="http://twitter.com/flimshaw">Contact me on Twitter</a> if you like the project or want to know more.  I'm happy to answer questions, and will be trying to flesh the documentation out in coming weeks.</p>
+
+			</div>
+
+		</div>
+		
+		<script type="text/javascript" src="js/lib/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="js/lib/Three.js"></script>
+		<script type="text/javascript" src="js/lib/stats.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-608903-14', 'flimshaw.net');
+		  ga('send', 'pageview');
+
+		</script>
+
+		</script>
+	</body>
+</html>
