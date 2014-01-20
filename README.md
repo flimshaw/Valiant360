@@ -4,7 +4,7 @@
 
 The aim of this project is to provide a reusable, free 360 degree video player for the web and mobile.  It has a ways to go in that regard.
 
-[Example](http://valiant.flimshaw.net) - [Development Roadmap][Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
+[Example](http://valiant.flimshaw.net) - [Development Roadmap](https://github.com/flimshaw/Valiant360/wiki/Development-Roadmap) - [Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
 
 #### Usage (TLDR; basically don't use this yet)
 
