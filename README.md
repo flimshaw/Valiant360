@@ -14,21 +14,7 @@ This is still being adapted from a demo for some video I shot several years ago,
 
 #### Planned Functionality 
 
-- load javascript library
-
-##### POSSIBLE INTERFACE EXAMPLES
-
-**Generic**
-
-var v = new Valiant360("videos/filename.mp4");
-v.play();
-v.pause();
-
-
-** JQuery **
-
-$("#videoPlayer").Valiant(); // instantiates player on video element, fills specified size with standard controls and mouse tracking
-$("#videoPlayer").Valiant().pause(); // pauses video etc etc
+Probably a JQuery plugin that instantiates the player, and then exposes various camera angle and video player functions.
 
 
 

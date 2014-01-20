@@ -1,6 +1,6 @@
 {
-  "name": "valiant.flimshaw.net",
-  "description": "site framework for playing valiant project videos in panorama",
+  "name": "Valiant360",
+  "description": "Browser-based 360 degree panorama video player",
   "version": "0.0.1",
   "engines": {
     "node": ">= 0.10.0"
