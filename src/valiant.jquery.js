@@ -22,7 +22,10 @@
     };
 
     var defaults = {
-        fov: 35
+        fov: 35,
+        loop: "loop",
+        muted: true,
+        debug: false
     }
 
     var camera
@@ -30,7 +33,8 @@
       , renderer
       , video
       , texture
-      , texture_placeholder;
+      , texture_placeholder
+      , self;
   
     $.fn.Valiant360 = function() {  
         if (typeof arguments[0] === 'string') {  
@@ -45,16 +49,60 @@
         else {  
             //create mediaPlayer  
             createMediaPlayer.apply(this, arguments);  
-        }  
+        }
+
+        self = this;
+
         return this;  
     };  
   
     function createMediaPlayer(options){
 
-        // process defaults
+        this.options = $.extend( {}, defaults, options) ;
 
+        // create ThreeJS scene and camera
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera( options.fov, window.innerWidth / window.innerHeight, .1, 1000);
+        camera = new THREE.PerspectiveCamera( this.options.fov, window.innerWidth / window.innerHeight, .1, 1000);
+
+        // create off-dom video player
+        video = document.createElement( 'video' );
+        video.loop = this.options.loop;
+        video.muted = this.options.muted;
+
+        // attach video player event listeners
+        video.addEventListener("ended", function(e) {
+            log("video loaded");
+        });
+
+        // Progress Meter
+        video.addEventListener("progress", function(e) {
+            var percent = null;
+                if (video && video.buffered && video.buffered.length > 0 && video.buffered.end && video.duration) {
+                    percent = video.buffered.end(0) / video.duration;
+                } 
+                // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
+                // to be anything other than 0. If the byte count is available we use this instead.
+                // Browsers that support the else if do not seem to have the bufferedBytes value and
+                // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
+                else if (video && video.bytesTotal != undefined && video.bytesTotal > 0 && video.bufferedBytes != undefined) {
+                    percent = video.bufferedBytes / video.bytesTotal;
+                }
+
+                var cpct = Math.round(percent * 100);
+                if(cpct == 100) {
+                    
+                } else {
+                    log(cpct);
+                }
+            
+        });
+
+        // Video Play Listener, fires after video loads
+        video.addEventListener("canplaythrough", function(e) {
+            video.play();
+        });
+
+        video.src = this.attr('data-video-src');
     }  
   
     //Exposed functions  
@@ -64,6 +112,12 @@
   
     function stop() {  
       //code to stop media  
+    }
+
+
+    // TODO: wire up a custom log function to turn off if we have debug mode set to false
+    function log(msg) {
+        console.info(msg);
     }
 
 });

@@ -18,8 +18,8 @@ require([
 
 	$(document).ready(function() {
 
-		$("#valiantContainer").Valiant360();
-		$("#valiantContainer").Valiant360('play');
+		$(".Valiant360").Valiant360({ debug: true });
+		$(".Valiant360").Valiant360('play');
 	
 	});
 
