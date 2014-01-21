@@ -16,4 +16,4 @@ The following libraries are used in this tool's creation.
 
 + JQuery 1.7.2 (MIT License)
 + Three.js + stats (MIT License)
-+ Twitter Bootstrap (MIT License)
++ Twitter Bootstrap (MIT License) (not strictly necessary at the moment)
