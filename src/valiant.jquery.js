@@ -36,8 +36,9 @@
       , texture_placeholder
       , self;
 
-    var lat = 45;
-    var lon = 0;
+    var lat = 45
+      , lon = 0
+      , fov = 35;
   
     $.fn.Valiant360 = function() {  
         if (typeof arguments[0] === 'string') {  
@@ -125,6 +126,63 @@
             log("playing");
         });
 
+        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+        document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+        document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
+
+        // attach mouse listeners
+        function onDocumentMouseMove( event ) {
+            onPointerDownPointerX = event.clientX;
+            onPointerDownPointerY = -event.clientY;
+
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+            if ( 1 ) {
+
+                lon = ( event.clientX / window.innerWidth ) * 430 - 225
+                lat = ( event.clientY / window.innerHeight ) * -180 + 90
+
+            }
+        }
+
+        function onDocumentMouseWheel( event ) {
+
+            var wheelSpeed = -.01;
+
+            // WebKit
+
+            if ( event.wheelDeltaY ) {
+
+                fov -= event.wheelDeltaY * wheelSpeed;
+
+            // Opera / Explorer 9
+
+            } else if ( event.wheelDelta ) {
+
+                fov -= event.wheelDelta * wheelSpeed;
+
+            // Firefox
+
+            } else if ( event.detail ) {
+
+                fov += event.detail * 1.0;
+
+            }
+
+            var fovMin = 3;
+            var fovMax = 100;
+
+            if(fov < fovMin) {
+                fov = fovMin;
+            } else if(fov > fovMax) {
+                fov = fovMax;
+            }
+
+            camera.setLens(fov)
+            //render();
+
+        }
+
         // set the video src and begin loading
         video.src = this.attr('data-video-src');
     }  
@@ -168,7 +226,6 @@
         camera.position.z = - cz;
 
         renderer.render( scene, camera );
-        log('rendering');
     }
 
 
