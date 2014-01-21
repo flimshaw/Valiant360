@@ -31,7 +31,9 @@
     // CHANGE THE BELOW NAME TO REFLECT THE NAME OF THE PLUGIN ( i.e. $('#div').pluginName() )
     var pluginName = 'Valiant360',
         defaults = {
-            buttons: []
+            fov: 36,
+            lon: 0,
+            lat: 45
         };
 
     // The actual plugin constructor
