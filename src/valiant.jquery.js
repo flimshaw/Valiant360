@@ -35,6 +35,9 @@
       , texture
       , texture_placeholder
       , self;
+
+    var lat = 45;
+    var lon = 0;
   
     $.fn.Valiant360 = function() {  
         if (typeof arguments[0] === 'string') {  
@@ -60,14 +63,33 @@
 
         this.options = $.extend( {}, defaults, options) ;
 
-        // create ThreeJS scene and camera
+        // create ThreeJS scene
         scene = new THREE.Scene();
+
+        // create ThreeJS camera
         camera = new THREE.PerspectiveCamera( this.options.fov, window.innerWidth / window.innerHeight, .1, 1000);
+
+        // create ThreeJS renderer and append it to our object
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        this.append(renderer.domElement);
 
         // create off-dom video player
         video = document.createElement( 'video' );
         video.loop = this.options.loop;
         video.muted = this.options.muted;
+
+        // create ThreeJS texture and high performance defaults
+        texture = new THREE.Texture( video );
+        texture.generateMipmaps = false;
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.format = THREE.RGBFormat;
+
+        // create ThreeJS mesh sphere onto which our texture will be drawn
+        mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
+        mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
+        scene.add(mesh);
 
         // attach video player event listeners
         video.addEventListener("ended", function(e) {
@@ -92,16 +114,18 @@
                 if(cpct == 100) {
                     
                 } else {
-                    log(cpct);
+                    // do something with this percentage info (cpct)
                 }
-            
         });
 
         // Video Play Listener, fires after video loads
         video.addEventListener("canplaythrough", function(e) {
             video.play();
+            animate();
+            log("playing");
         });
 
+        // set the video src and begin loading
         video.src = this.attr('data-video-src');
     }  
   
@@ -112,6 +136,39 @@
   
     function stop() {  
       //code to stop media  
+    }
+
+    function animate() {
+        // set our animate function to fire next time a frame is ready
+        requestAnimationFrame( animate );
+
+        if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
+            texture.needsUpdate = true;
+        }
+
+        render();
+
+    }
+
+    function render() {
+
+        lat = Math.max( - 85, Math.min( 85, lat ) );
+        phi = ( 90 - lat ) * Math.PI / 180;
+        theta = lon * Math.PI / 180;
+
+        var cx = 500 * Math.sin( phi ) * Math.cos( theta );
+        var cy = 500 * Math.cos( phi );
+        var cz = 500 * Math.sin( phi ) * Math.sin( theta );
+
+        camera.lookAt(new THREE.Vector3(cx, cy, cz));
+
+        // distortion
+        camera.position.x = - cx;
+        camera.position.y = - cy;
+        camera.position.z = - cz;
+
+        renderer.render( scene, camera );
+        log('rendering');
     }
 
 
