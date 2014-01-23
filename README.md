@@ -16,6 +16,7 @@ There is currently no mobile support, but as Chrome and Safari mobile editions e
 See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) or the [example](http://flimshaw.github.io/Valiant360).
 
 **Markup**
+
 On the HTML side, create a div to act as your container, and add a data-video-src attribute pointing to the video file you wish to play.
 
 ```
