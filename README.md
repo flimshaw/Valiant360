@@ -25,6 +25,8 @@ On the HTML side, create a div to act as your container, and add a data-video-sr
 
 **Javascript**
 
+More detailed api documentation pending, for now the below explains about all you can do.
+
 ```
 	// initialize plugin, default options shown
 	$('.myVideo').Valiant360({
