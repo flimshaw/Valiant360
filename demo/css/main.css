@@ -1,0 +1,175 @@
+body {
+  overflow: hidden;
+}
+a {
+  color: #eee;
+}
+a:hover {
+  text-decoration: none;
+}
+#panoPlayer {
+  position: absolute;
+  z-index: 0;
+}
+.container {
+  position: relative;
+  z-index: 100;
+}
+canvas {
+  cursor: crosshair;
+}
+.menuHide {
+  display: none;
+}
+#info {
+  color: #ffffff;
+  padding: 0;
+}
+#info .top {
+  background: rgba(255, 128, 0, 0.75);
+  overflow: hidden;
+}
+#info h1 {
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+  font-weight: normal;
+  font-size: 2.5em;
+  margin: 0;
+  padding: 15px 0px 10px 0;
+  line-height: 1em;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 30px;
+  position: relative;
+  left: 12px;
+  text-transform: uppercase;
+}
+#info h2 {
+  font-size: 1em;
+  margin: 0;
+  padding: 0 10px 0 20px;
+}
+/* ABOUT */
+.about {
+  display: none;
+  z-index: 3000;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 1em;
+  box-sizing: border-box;
+  height: 430px;
+  color: #ddd;
+  overflow: auto!important;
+}
+.about h3 {
+  margin-top: 0;
+}
+.aboutClose {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  text-decoration: none;
+  position: absolute;
+  color: #fff;
+  right: 10px;
+}
+.twitter-share-button {
+  position: relative;
+  left: 10px;
+  bottom: 8px;
+}
+.aboutClose:hover {
+  color: #fff;
+}
+.videoControls {
+  font-size: 1.5em;
+  position: absolute;
+  padding: 10px 0 0 0;
+  right: 20px;
+  top: 40px;
+}
+.videoControls i {
+  color: #fff;
+}
+.videoControls i:hover {
+  color: #ccc;
+}
+.videoControls .active i {
+  color: #c00;
+}
+nav {
+  margin: 10px 0;
+  padding: 3px 20px;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+nav a {
+  color: #ccc;
+}
+nav a:hover {
+  text-decoration: none;
+  color: #fff;
+}
+.videoNav {
+  margin: 20px 0;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.videoNav > a {
+  display: block;
+  padding: 10px;
+  margin: 0;
+  font-size: 24px;
+  color: #fff;
+  height: auto!important;
+  line-height: 1.1em;
+  width: 100%;
+}
+.videoNav > a:hover {
+  text-decoration: none;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.videoNav h3 {
+  font-size: 18px;
+  padding: 10px;
+  margin: 0;
+  color: #eee;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+.videoNav .location {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+.videoNav .location h4 {
+  padding: 10px;
+  margin: 0;
+  font-size: 24px;
+}
+.videoNav .location .videos {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 35%;
+  list-style-type: none;
+}
+.videoNav .location .videos a {
+  display: inline-block;
+  width: 35px;
+  font-size: 12px;
+  text-decoration: none;
+  color: #ffffff;
+}
+.videoNav .location .videos a.active {
+  color: #d11;
+}
+.videoNav .location:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.videoNav .location:hover .videos {
+  display: block;
+}
+.statusMessage {
+  background-color: rgba(100, 100, 100, 0.75);
+  color: #fff;
+  padding: 3px 10px 3px 10px;
+}
+#stats {
+  display: none;
+}

@@ -21,6 +21,17 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.js'
       }
     },
+    copy: {
+      demo: {
+        files: [
+          // copy demo files to flimshaw hosting
+          { expand: true, cwd: 'demo/', src: ["**"], dest: "../flimshaw.github.io/Valiant360/" },
+
+          // copy src files 
+          { expand: true, src: ["src/*"], dest: "../flimshaw.github.io/Valiant360/src" }
+        ]
+      }
+    },
     uglify: {
       options: {
         banner: '<%= banner %>'
@@ -91,6 +102,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);

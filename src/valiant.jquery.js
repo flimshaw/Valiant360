@@ -13,7 +13,7 @@
 // the semi-colon before the function invocation is a safety 
 // net against concatenated scripts and/or other plugins 
 // that are not closed properly.
-;define(['jquery', 'threejs'], function ( $, THREE ) {
+;define(['jquery', 'threejs', 'detector'], function ( $, THREE ) {
  
     //define the commands that can be used  
     var commands = {  
@@ -71,7 +71,7 @@
         camera = new THREE.PerspectiveCamera( this.options.fov, window.innerWidth / window.innerHeight, .1, 1000);
 
         // create ThreeJS renderer and append it to our object
-        renderer = new THREE.WebGLRenderer();
+renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
         this.append(renderer.domElement);
 
@@ -195,13 +195,15 @@
     function stop() {  
       //code to stop media  
     }
-
+    var count = 1;
     function animate() {
         // set our animate function to fire next time a frame is ready
         requestAnimationFrame( animate );
 
-        if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-            texture.needsUpdate = true;
+        if ( video.readyState === video.HAVE_ENOUGH_DATA) {
+            if(typeof(texture) != "undefined" ) {
+                texture.needsUpdate = true;      
+            }
         }
 
         render();

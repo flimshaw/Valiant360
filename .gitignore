@@ -1,3 +1,4 @@
 videos/*
 node_modules/*
 css/main.css
+build/*

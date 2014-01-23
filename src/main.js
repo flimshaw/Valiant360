@@ -2,11 +2,16 @@ require.config({
 	paths: {
 		"jquery": "lib/jquery-1.7.2.min",
 		"threejs": "lib/Three",
-		"valiant": "valiant.jquery"
+		"detector": "lib/Detector",
+		"valiant": "valiant.jquery",
+		"modernizr": "lib/modernizr-latest"
 	},
 	shim: {
 		"threejs": {
 			exports: "THREE"
+		},
+		"detector": {
+			deps: ['threejs']
 		}
 	}
 });
