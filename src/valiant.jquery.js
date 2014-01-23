@@ -215,10 +215,16 @@
     function animate() {
         // set our animate function to fire next time a frame is ready
         requestAnimationFrame( animate );
-
+        count++;
+        if(count > 100000) {
+            count = 0;
+        }
         if ( video.readyState === video.HAVE_ENOUGH_DATA) {
             if(typeof(texture) != "undefined" ) {
-                texture.needsUpdate = true;      
+                if(count % 2 == 0) {
+                    texture.needsUpdate = true; 
+                }
+                     
             }
         }
 

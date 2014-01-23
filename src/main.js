@@ -24,6 +24,12 @@ require([
 	$(document).ready(function() {
 
 		$(".Valiant360").Valiant360();
+
+		$("a.fullscreenButton").click(function(e) {
+			$('canvas')[0].webkitRequestFullScreen();
+			e.preventDefault();
+		});
+
 //		$(".Valiant360").Valiant360('play');
 	
 	});
