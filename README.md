@@ -13,7 +13,7 @@ There is currently no mobile support, but as Chrome and Safari mobile editions e
 
 #### Usage 
 
-See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) or the [example](http://flimshaw.github.io/Valiant360).
+See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) or the [example](http://flimshaw.github.io/Valiant360).  Moving the mouse will pan the camera, and the scroll wheel will zoom in and out.
 
 **Markup**
 
