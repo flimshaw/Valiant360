@@ -4,11 +4,11 @@
 
 The aim of this project is to provide a reusable, free 360 degree video player for the web and mobile.  It has a ways to go in that regard.
 
-[Example](http://valiant.flimshaw.net) - [Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
+[Example](http://flimshaw.github.io/Valiant360) - [Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
 
 #### Usage 
 
-See the demo/ folder for a basic implementation, more documentation is pending.
+See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) or the [example](http://flimshaw.github.io/Valiant360) for a basic implementation, more documentation is pending.
 
 #### 3rd party libraries and their licenses
 
