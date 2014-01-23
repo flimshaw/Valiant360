@@ -18,14 +18,17 @@
     //define the commands that can be used  
     var commands = {  
         play: play,  
-        stop: stop  
+        stop: pause  
     };
 
     var defaults = {
         fov: 35,
+        lon: 0,
+        lat: 0,
         loop: "loop",
         muted: true,
-        debug: false
+        debug: false,
+        autoplay: true
     }
 
     var camera
@@ -34,13 +37,13 @@
       , video
       , texture
       , texture_placeholder
-      , self;
-
-    var lat = 45
-      , lon = 0
-      , fov = 35;
+      , self
+      , lat
+      , lon
+      , fov;
   
-    $.fn.Valiant360 = function() {  
+    $.fn.Valiant360 = function() {
+
         if (typeof arguments[0] === 'string') {  
             //execute string comand on mediaPlayer  
             var property = arguments[1];  
@@ -55,14 +58,20 @@
             createMediaPlayer.apply(this, arguments);  
         }
 
-        self = this;
+
 
         return this;  
     };  
   
     function createMediaPlayer(options){
 
+        self = this;
+
         this.options = $.extend( {}, defaults, options) ;
+
+        lat = this.options.lat;
+        lon = this.options.lon;
+        fov = this.options.fov;
 
         // create ThreeJS scene
         scene = new THREE.Scene();
@@ -71,7 +80,7 @@
         camera = new THREE.PerspectiveCamera( this.options.fov, window.innerWidth / window.innerHeight, .1, 1000);
 
         // create ThreeJS renderer and append it to our object
-renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
+        renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
         renderer.setSize( window.innerWidth, window.innerHeight );
         this.append(renderer.domElement);
 
@@ -121,7 +130,11 @@ renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer()
 
         // Video Play Listener, fires after video loads
         video.addEventListener("canplaythrough", function(e) {
-            video.play();
+
+            if(self.options.autoplay == true) {
+                video.play(); 
+            }
+            
             animate();
             log("playing");
         });
@@ -190,11 +203,14 @@ renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer()
     //Exposed functions  
     function play() {  
       //code to play media
+      video.play()
     }  
   
-    function stop() {  
+    function pause() {  
       //code to stop media  
+      video.pause();
     }
+
     var count = 1;
     function animate() {
         // set our animate function to fire next time a frame is ready
