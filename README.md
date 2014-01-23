@@ -1,4 +1,4 @@
-## Valiant 360 - BETA
+## Valiant 360 (beta)
 
 ### A browser-based video player for 360 degree panorama videos.
 
