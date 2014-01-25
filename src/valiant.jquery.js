@@ -183,8 +183,10 @@
             
 
             if($(self).find('canvas').is(":hover")) {
-                lon = ( event.clientX / window.innerWidth ) * 430 - 225
-                lat = ( event.clientY / window.innerHeight ) * -180 + 90                
+                var x = event.pageX - $(self).find('canvas').offset().left;
+                var y = event.pageY - $(self).find('canvas').offset().top;
+                lon = ( x / $(self).find('canvas').width() ) * 430 - 225
+                lat = ( y / $(self).find('canvas').height() ) * -180 + 90                
             }
 
 
