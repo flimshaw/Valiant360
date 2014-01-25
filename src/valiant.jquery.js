@@ -180,12 +180,15 @@
 
             onPointerDownLon = lon;
             onPointerDownLat = lat;
-            if ( 1 ) {
+            
 
+            if($(self).find('canvas').is(":hover")) {
                 lon = ( event.clientX / window.innerWidth ) * 430 - 225
-                lat = ( event.clientY / window.innerHeight ) * -180 + 90
-
+                lat = ( event.clientY / window.innerHeight ) * -180 + 90                
             }
+
+
+            
         }
 
         function onDocumentMouseWheel( event ) {
