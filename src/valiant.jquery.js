@@ -60,38 +60,12 @@
             createMediaPlayer.apply(this, arguments);  
         }
 
+        // save original width of our container
         this.originalWidth = $(this).find('canvas').width();
         this.originalHeight = $(this).find('canvas').height();
 
         return this;  
     };
-
-
-    function fullscreen() {
-
-        //$(this).find('canvas').height = screen.availHeight;
-        //$(this).find('canvas').width = screen.availWidth;
-        if(!window.screenTop && !window.screenY) {
-            var w = self.originalWidth;
-            var h = self.originalHeight;  
-        } else {
-            var w = screen.availWidth;
-            var h = screen.availHeight;
-        }
-        console.log(w);
-        //$(this).find('canvas').width = w;
-        //$(this).find('canvas').height = h;
-     
-
-        renderer.setSize(w, h);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-    }
-
-    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
-
-
-    //window.addEventListener('resize', resize);
   
     function createMediaPlayer(options){
 
@@ -210,8 +184,6 @@
                 lon = ( x / $(self).find('canvas').width() ) * 430 - 225
                 lat = ( y / $(self).find('canvas').height() ) * -180 + 90                
             }
-
-
             
         }
 
@@ -256,6 +228,27 @@
         // set the video src and begin loading
         video.src = this.attr('data-video-src');
     }  
+
+    function fullscreen() {
+
+        //$(this).find('canvas').height = screen.availHeight;
+        //$(this).find('canvas').width = screen.availWidth;
+        if(!window.screenTop && !window.screenY) {
+            var w = self.originalWidth;
+            var h = self.originalHeight;  
+        } else {
+            var w = screen.availWidth;
+            var h = screen.availHeight;
+        }
+        console.log(w);
+
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+    }
+
+    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
+
   
     //Exposed functions  
     function play() {  
