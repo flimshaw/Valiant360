@@ -191,6 +191,14 @@
         controls.fullscreenSprite.name = "fullscreen";
         controls.scene.add( controls.fullscreenSprite );
 
+        tex = THREE.ImageUtils.loadTexture( 'images/mute.png' );
+        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
+        controls.muteSprite = new THREE.Sprite( mat );
+        controls.muteSprite.position.set( ($(self).width() / 2) - 200, -($(self).height() / 2) + 50, 0 );
+        controls.muteSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
+        controls.muteSprite.name = "mute";
+        controls.scene.add( controls.muteSprite );
+
 
 
 
@@ -272,7 +280,7 @@
                 // use picking ray since it's an orthographic camera
                 var ray = projector.pickingRay( vector, controls.camera );
 
-                var intersects = ray.intersectObjects( [controls.playSprite, controls.pauseSprite, controls.fullscreenSprite] );
+                var intersects = ray.intersectObjects( [controls.playSprite, controls.pauseSprite, controls.fullscreenSprite, controls.muteSprite] );
 
                 if ( intersects.length > 0 ) {
 
@@ -284,6 +292,8 @@
                         play();
                     } else if(o.name == 'pause') {
                         pause();
+                    } else if(o.name == 'mute') {
+                        video.muted = video.muted == 0;
                     }
 
                 }
