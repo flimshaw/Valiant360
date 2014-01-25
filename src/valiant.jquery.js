@@ -286,9 +286,12 @@
             }
         }
 
-
+        var c = $(self).find('canvas')[0];
+        
 
         render();
+
+
 
     }
 
