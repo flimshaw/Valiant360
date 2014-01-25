@@ -173,6 +173,8 @@
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
 
+
+        // CONTROLS
         $(self).find('.playButton').click(function(e) {
             e.preventDefault();
             play();
