@@ -10,19 +10,21 @@
 	width: 1280px;
 	height: 720px;
 	.controls {
+		overflow: hidden;
 		position: absolute;
 		bottom: 0;
 		background-color:rgba(0,0,0,.75);
-		height: 100px;
+		height: 0px;
 		width: 100%;
 		box-sizing: border-box;
-		padding: 10px;
+		.transition(all .5s ease-in-out);
+		padding: 0 20px;
 		.button {
 			width: 50px;
 			text-align: center;
 			margin: 0;
 			padding: 0;
-			line-height: 80px;
+			line-height: 100px;
 			padding: 0 .25em;
 			opacity: .5;
 			font-size: 4em;
@@ -36,6 +38,12 @@
 		.fullscreenButton {
 			float: right;
 		}
+	}
+}
+
+.Valiant360:hover {
+	.controls {
+		height: 100px;
 	}
 }
 

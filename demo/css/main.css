@@ -4,20 +4,25 @@
   height: 720px;
 }
 .Valiant360 .controls {
+  overflow: hidden;
   position: absolute;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.75);
-  height: 100px;
+  height: 0px;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  padding: 0 20px;
 }
 .Valiant360 .controls .button {
   width: 50px;
   text-align: center;
   margin: 0;
   padding: 0;
-  line-height: 80px;
+  line-height: 100px;
   padding: 0 .25em;
   opacity: .5;
   font-size: 4em;
@@ -33,6 +38,9 @@
 }
 .Valiant360 .controls .fullscreenButton {
   float: right;
+}
+.Valiant360:hover .controls {
+  height: 100px;
 }
 .fullscreen {
   width: 100%;

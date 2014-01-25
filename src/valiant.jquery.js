@@ -253,7 +253,12 @@
                 fov = fovMax;
             }
 
-            camera.setLens(fov)
+
+            if($(self).find('canvas').is(":hover")) {
+                camera.setLens(fov);
+                event.preventDefault();
+            }
+            
 
         }        
     }
