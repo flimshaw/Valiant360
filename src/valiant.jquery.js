@@ -143,10 +143,18 @@
             log("playing");
         });
 
+
+        attachControlEvents();
+
+        // set the video src and begin loading
+        video.src = this.attr('data-video-src');
+    }  
+
+    function attachControlEvents() {
+
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
-
 
         // CONTROLS
         $(self).find('.playButton').click(function(e) {
@@ -221,13 +229,9 @@
             }
 
             camera.setLens(fov)
-            //render();
 
-        }
-
-        // set the video src and begin loading
-        video.src = this.attr('data-video-src');
-    }  
+        }        
+    }
 
     function fullscreen() {
 
