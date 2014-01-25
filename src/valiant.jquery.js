@@ -41,7 +41,10 @@
       , self
       , lat
       , lon
-      , fov;
+      , fov
+      , isFullscreen = false;
+
+    var controls = {};
   
     $.fn.Valiant360 = function() {
 
@@ -57,7 +60,8 @@
             commands[arguments[0]].apply(this, args);  
         }  else {  
             //create mediaPlayer  
-            createMediaPlayer.apply(this, arguments);  
+            createMediaPlayer.apply(this, arguments);
+            createControls.apply(this, arguments);
         }
 
         // save original width of our container
@@ -66,7 +70,7 @@
 
         return this;  
     };
-  
+
     function createMediaPlayer(options){
 
         self = this;
@@ -86,6 +90,8 @@
         // create ThreeJS renderer and append it to our object
         renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
         renderer.setSize( this.width(), this.height() );
+        renderer.autoClear = false;
+        renderer.setClearColor( 0xffffff, 1 );
         this.append(renderer.domElement);
 
         // create off-dom video player
@@ -126,7 +132,7 @@
 
                 var cpct = Math.round(percent * 100);
                 if(cpct == 100) {
-                    
+                    // do something now that we are done
                 } else {
                     // do something with this percentage info (cpct)
                 }
@@ -143,17 +149,63 @@
             log("playing");
         });
 
-
+        // wire up controller events to dom elements
         attachControlEvents();
+
+        // create control sprites
+        createControlSprites();
 
         // set the video src and begin loading
         video.src = this.attr('data-video-src');
     }  
 
+    function createControlSprites() {
+
+        controls.camera = new THREE.OrthographicCamera( - $(self).width() / 2,  $(self).width() / 2,  $(self).height() / 2, - $(self).height() / 2, 1, 10 )
+        controls.camera.position.z = 1;
+
+        controls.scene = new THREE.Scene();
+
+        // play button
+        var tex = THREE.ImageUtils.loadTexture( 'images/play.png' );
+        var mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
+        controls.playSprite = new THREE.Sprite( mat );
+        controls.playSprite.position.set( ($(self).width() / 2) - 50, -($(self).height() / 2) + 50, 0 );
+        controls.playSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
+        controls.playSprite.name = "play";
+        controls.scene.add( controls.playSprite );
+        
+        tex = THREE.ImageUtils.loadTexture( 'images/pause.png' );
+        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
+        controls.pauseSprite = new THREE.Sprite( mat );
+        controls.pauseSprite.position.set( ($(self).width() / 2) - 100, -($(self).height() / 2) + 50, 0 );
+        controls.pauseSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
+        controls.pauseSprite.name = "pause";
+        controls.scene.add( controls.pauseSprite );
+
+        tex = THREE.ImageUtils.loadTexture( 'images/fullscreen.png' );
+        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
+        controls.fullscreenSprite = new THREE.Sprite( mat );
+        controls.fullscreenSprite.position.set( ($(self).width() / 2) - 150, -($(self).height() / 2) + 50, 0 );
+        controls.fullscreenSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
+        controls.fullscreenSprite.name = "fullscreen";
+        controls.scene.add( controls.fullscreenSprite );
+
+
+
+
+    }
+
+    // create separate webgl layer and scene for drawing onscreen controls
+    function createControls(options) {
+         
+    }
+
     function attachControlEvents() {
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
 
         // CONTROLS
@@ -193,6 +245,48 @@
                 lat = ( y / $(self).find('canvas').height() ) * -180 + 90                
             }
             
+        }
+
+        function onDocumentMouseDown( event ) {
+                event.preventDefault();
+
+                var projector = new THREE.Projector();
+                var w, h;
+
+                if(isFullscreen) {
+                    w = screen.availWidth;
+                    h = screen.availHeight;
+                } else {
+                    w = $(self).width();
+                    h = $(self).height();
+                }
+ 
+                var vector = new THREE.Vector3(
+                    (event.clientX / w)*2-1,
+                    -(event.clientY / h)*2+1,
+                    0.5
+                );
+
+                console.log(vector);
+
+                // use picking ray since it's an orthographic camera
+                var ray = projector.pickingRay( vector, controls.camera );
+
+                var intersects = ray.intersectObjects( [controls.playSprite, controls.pauseSprite, controls.fullscreenSprite] );
+
+                if ( intersects.length > 0 ) {
+
+                    var o = intersects[0].object;
+                    console.log(o);
+                    if(o.name == 'fullscreen') {
+                        $(self).find('canvas')[0].webkitRequestFullScreen();
+                    } else if(o.name == 'play') {
+                        play();
+                    } else if(o.name == 'pause') {
+                        pause();
+                    }
+
+                }
         }
 
         function onDocumentMouseWheel( event ) {
@@ -235,16 +329,15 @@
 
     function fullscreen() {
 
-        //$(this).find('canvas').height = screen.availHeight;
-        //$(this).find('canvas').width = screen.availWidth;
         if(!window.screenTop && !window.screenY) {
             var w = self.originalWidth;
-            var h = self.originalHeight;  
+            var h = self.originalHeight;
+            isFullscreen = false;
         } else {
             var w = screen.availWidth;
             var h = screen.availHeight;
+            isFullscreen = true;
         }
-        console.log(w);
 
         renderer.setSize(w, h);
         camera.aspect = w / h;
@@ -309,7 +402,11 @@
         camera.position.y = - cy;
         camera.position.z = - cz;
 
+        renderer.clear();
         renderer.render( scene, camera );
+        renderer.clearDepth();
+        renderer.render( controls.scene, controls.camera );
+
     }
 
 

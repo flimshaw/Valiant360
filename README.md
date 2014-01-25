@@ -53,3 +53,9 @@ The following libraries are used in this tool's creation.
 + JQuery 1.7.2 (MIT License)
 + Three.js + stats (MIT License)
 + Twitter Bootstrap (MIT License) (not strictly necessary at the moment)
+
+The following icons or graphics were used
+http://www.flaticon.com/free-icon/play-button_320 - play button
+http://www.flaticon.com/free-icon/pause-ios-7-interface-symbol_17270 - pause
+http://www.flaticon.com/free-icon/expand-screen_871 - fullscreen icon
+http://www.flaticon.com/packs/elegant-font - mute/unmute icon
