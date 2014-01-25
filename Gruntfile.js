@@ -79,17 +79,17 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test', 'qunit']
       },
       main_css: {
-        files: 'css/*.less',
+        files: 'demo/css/*.less',
         tasks: ['less']
       }
     },
     less: {
       development: {
         options: {
-          paths: ["css"]
+          paths: ["demo/css"]
         },
         files: {
-          "css/main.css": "css/main.less"
+          "demo/css/main.css": "demo/css/main.less"
         }
       },
     }

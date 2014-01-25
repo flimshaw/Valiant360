@@ -18,7 +18,8 @@
     //define the commands that can be used  
     var commands = {  
         play: play,  
-        stop: pause  
+        stop: pause,
+        fullscreen: fullscreen
     };
 
     var defaults = {
@@ -45,23 +46,52 @@
     $.fn.Valiant360 = function() {
 
         if (typeof arguments[0] === 'string') {  
+           
             //execute string comand on mediaPlayer  
             var property = arguments[1];  
+            
             //remove the command name from the arguments  
             var args = Array.prototype.slice.call(arguments);  
             args.splice(0, 1);  
   
             commands[arguments[0]].apply(this, args);  
-        }  
-        else {  
+        }  else {  
             //create mediaPlayer  
             createMediaPlayer.apply(this, arguments);  
         }
 
-
+        this.originalWidth = $(this).find('canvas').width();
+        this.originalHeight = $(this).find('canvas').height();
 
         return this;  
-    };  
+    };
+
+
+    function fullscreen() {
+
+        //$(this).find('canvas').height = screen.availHeight;
+        //$(this).find('canvas').width = screen.availWidth;
+        if(!window.screenTop && !window.screenY) {
+            var w = self.originalWidth;
+            var h = self.originalHeight;  
+        } else {
+            var w = screen.availWidth;
+            var h = screen.availHeight;
+        }
+        console.log(w);
+        //$(this).find('canvas').width = w;
+        //$(this).find('canvas').height = h;
+     
+
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+    }
+
+    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
+
+
+    //window.addEventListener('resize', resize);
   
     function createMediaPlayer(options){
 
@@ -77,11 +107,11 @@
         scene = new THREE.Scene();
 
         // create ThreeJS camera
-        camera = new THREE.PerspectiveCamera( this.options.fov, window.innerWidth / window.innerHeight, .1, 1000);
+        camera = new THREE.PerspectiveCamera( this.options.fov, this.width() / this.height(), .1, 1000);
 
         // create ThreeJS renderer and append it to our object
         renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize( this.width(), this.height() );
         this.append(renderer.domElement);
 
         // create off-dom video player
@@ -222,7 +252,7 @@
         if ( video.readyState === video.HAVE_ENOUGH_DATA) {
             if(typeof(texture) != "undefined" ) {
                 var ct = new Date().getTime();
-                if(ct - time >= 33) {
+                if(ct - time >= 30) {
                     texture.needsUpdate = true; 
                     time = ct;
                 }
