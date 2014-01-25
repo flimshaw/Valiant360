@@ -173,6 +173,26 @@
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
 
+        $(self).find('.playButton').click(function(e) {
+            e.preventDefault();
+            play();
+        });
+
+        $(self).find('.pauseButton').click(function(e) {
+            e.preventDefault();
+            pause();
+        });
+
+        $(self).find(".fullscreenButton").click(function(e) {
+            e.preventDefault();
+            $(self).find('canvas')[0].webkitRequestFullScreen();
+        });
+
+        $(self).find(".muteButton").click(function(e) {
+            e.preventDefault();
+            video.muted = video.muted == 0;
+        });
+
         // attach mouse listeners
         function onDocumentMouseMove( event ) {
             onPointerDownPointerX = event.clientX;
