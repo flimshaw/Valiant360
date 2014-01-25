@@ -211,22 +211,25 @@
       video.pause();
     }
 
-    var count = 1;
+
+    // store the time of the script start
+    var time = new Date().getTime();
+
     function animate() {
         // set our animate function to fire next time a frame is ready
         requestAnimationFrame( animate );
-        count++;
-        if(count > 100000) {
-            count = 0;
-        }
+
         if ( video.readyState === video.HAVE_ENOUGH_DATA) {
             if(typeof(texture) != "undefined" ) {
-                if(count % 2 == 0) {
+                var ct = new Date().getTime();
+                if(ct - time >= 33) {
                     texture.needsUpdate = true; 
+                    time = ct;
                 }
-                     
             }
         }
+
+
 
         render();
 
