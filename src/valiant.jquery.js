@@ -229,7 +229,7 @@
 
         $(self).find(".fullscreenButton").click(function(e) {
             e.preventDefault();
-            $(self).find('canvas')[0].webkitRequestFullScreen();
+            $(self)[0].webkitRequestFullScreen();
         });
 
         $(self).find(".muteButton").click(function(e) {
@@ -287,7 +287,7 @@
                     var o = intersects[0].object;
                     console.log(o);
                     if(o.name == 'fullscreen') {
-                        $(self).find('canvas')[0].webkitRequestFullScreen();
+                        $(self)[0].webkitRequestFullScreen();
                     } else if(o.name == 'play') {
                         play();
                     } else if(o.name == 'pause') {
@@ -352,6 +352,12 @@
         renderer.setSize(w, h);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+
+        if(isFullscreen) {
+            $(self).addClass('fullscreen');
+        } else {
+            $(self).removeClass('fullscreen');
+        }
     }
 
     $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
