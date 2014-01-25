@@ -1,8 +1,41 @@
+.transition (@transition) {
+	-webkit-transition: @transition;  
+	-moz-transition:    @transition;
+	-ms-transition:     @transition; 
+	-o-transition:      @transition;  
+}
+
 .Valiant360 {
+	position: relative;
 	width: 1280px;
 	height: 720px;
 	.controls {
 		position: absolute;
+		bottom: 0;
+		background-color:rgba(0,0,0,.75);
+		height: 100px;
+		width: 100%;
+		box-sizing: border-box;
+		padding: 10px;
+		.button {
+			width: 50px;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+			line-height: 80px;
+			padding: 0 .25em;
+			opacity: .5;
+			font-size: 4em;
+			color: #fff;
+			text-decoration: none;
+			.transition(all .25s ease-in-out);
+		}
+		.button:hover {
+			opacity: 1;
+		}
+		.fullscreenButton {
+			float: right;
+		}
 	}
 }
 

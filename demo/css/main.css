@@ -1,9 +1,38 @@
 .Valiant360 {
+  position: relative;
   width: 1280px;
   height: 720px;
 }
 .Valiant360 .controls {
   position: absolute;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  height: 100px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.Valiant360 .controls .button {
+  width: 50px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  line-height: 80px;
+  padding: 0 .25em;
+  opacity: .5;
+  font-size: 4em;
+  color: #fff;
+  text-decoration: none;
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+}
+.Valiant360 .controls .button:hover {
+  opacity: 1;
+}
+.Valiant360 .controls .fullscreenButton {
+  float: right;
 }
 .fullscreen {
   width: 100%;

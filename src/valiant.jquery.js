@@ -152,56 +152,8 @@
         // wire up controller events to dom elements
         attachControlEvents();
 
-        // create control sprites
-        createControlSprites();
-
         // set the video src and begin loading
         video.src = this.attr('data-video-src');
-    }  
-
-    function createControlSprites() {
-
-        controls.camera = new THREE.OrthographicCamera( - $(self).width() / 2,  $(self).width() / 2,  $(self).height() / 2, - $(self).height() / 2, 1, 10 )
-        controls.camera.position.z = 1;
-
-        controls.scene = new THREE.Scene();
-
-        // play button
-        var tex = THREE.ImageUtils.loadTexture( 'images/play.png' );
-        var mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
-        controls.playSprite = new THREE.Sprite( mat );
-        controls.playSprite.position.set( ($(self).width() / 2) - 50, -($(self).height() / 2) + 50, 0 );
-        controls.playSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
-        controls.playSprite.name = "play";
-        controls.scene.add( controls.playSprite );
-        
-        tex = THREE.ImageUtils.loadTexture( 'images/pause.png' );
-        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
-        controls.pauseSprite = new THREE.Sprite( mat );
-        controls.pauseSprite.position.set( ($(self).width() / 2) - 100, -($(self).height() / 2) + 50, 0 );
-        controls.pauseSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
-        controls.pauseSprite.name = "pause";
-        controls.scene.add( controls.pauseSprite );
-
-        tex = THREE.ImageUtils.loadTexture( 'images/fullscreen.png' );
-        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
-        controls.fullscreenSprite = new THREE.Sprite( mat );
-        controls.fullscreenSprite.position.set( ($(self).width() / 2) - 150, -($(self).height() / 2) + 50, 0 );
-        controls.fullscreenSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
-        controls.fullscreenSprite.name = "fullscreen";
-        controls.scene.add( controls.fullscreenSprite );
-
-        tex = THREE.ImageUtils.loadTexture( 'images/mute.png' );
-        mat = new THREE.SpriteMaterial( { map: tex, useScreenCoordinates: true } );
-        controls.muteSprite = new THREE.Sprite( mat );
-        controls.muteSprite.position.set( ($(self).width() / 2) - 200, -($(self).height() / 2) + 50, 0 );
-        controls.muteSprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
-        controls.muteSprite.name = "mute";
-        controls.scene.add( controls.muteSprite );
-
-
-
-
     }
 
     // create separate webgl layer and scene for drawing onscreen controls
@@ -213,13 +165,18 @@
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false );
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
 
         // CONTROLS
         $(self).find('.playButton').click(function(e) {
             e.preventDefault();
-            play();
+            if($(this).hasClass('fa-pause')) {
+                $(this).removeClass('fa-pause').addClass('fa-play');
+                pause();
+            } else {
+                $(this).removeClass('fa-play').addClass('fa-pause');
+                play();
+            }
         });
 
         $(self).find('.pauseButton').click(function(e) {
@@ -234,7 +191,13 @@
 
         $(self).find(".muteButton").click(function(e) {
             e.preventDefault();
-            video.muted = video.muted == 0;
+            if($(this).hasClass('fa-volume-off')) {
+                $(this).removeClass('fa-volume-off').addClass('fa-volume-up');
+                video.muted = false;
+            } else {
+                $(this).removeClass('fa-volume-up').addClass('fa-volume-off');
+                video.muted = true;
+            }
         });
 
         // attach mouse listeners
@@ -255,49 +218,7 @@
             
         }
 
-        function onDocumentMouseDown( event ) {
-                event.preventDefault();
-
-                var projector = new THREE.Projector();
-                var w, h;
-
-                if(isFullscreen) {
-                    w = screen.availWidth;
-                    h = screen.availHeight;
-                } else {
-                    w = $(self).width();
-                    h = $(self).height();
-                }
- 
-                var vector = new THREE.Vector3(
-                    (event.clientX / w)*2-1,
-                    -(event.clientY / h)*2+1,
-                    0.5
-                );
-
-                console.log(vector);
-
-                // use picking ray since it's an orthographic camera
-                var ray = projector.pickingRay( vector, controls.camera );
-
-                var intersects = ray.intersectObjects( [controls.playSprite, controls.pauseSprite, controls.fullscreenSprite, controls.muteSprite] );
-
-                if ( intersects.length > 0 ) {
-
-                    var o = intersects[0].object;
-                    console.log(o);
-                    if(o.name == 'fullscreen') {
-                        $(self)[0].webkitRequestFullScreen();
-                    } else if(o.name == 'play') {
-                        play();
-                    } else if(o.name == 'pause') {
-                        pause();
-                    } else if(o.name == 'mute') {
-                        video.muted = video.muted == 0;
-                    }
-
-                }
-        }
+        
 
         function onDocumentMouseWheel( event ) {
 
@@ -420,9 +341,6 @@
 
         renderer.clear();
         renderer.render( scene, camera );
-        renderer.clearDepth();
-        renderer.render( controls.scene, controls.camera );
-
     }
 
 
