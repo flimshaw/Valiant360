@@ -20,7 +20,7 @@ See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) o
 On the HTML side, create a div to act as your container, and add a data-video-src attribute pointing to the video file you wish to play.
 
 ```
-	<div class="myVideo" data-video-src="videos/my-video.mp4"></div>
+	<div class=".Valiant360" data-video-src="videos/my-video.mp4"></div>
 ```
 
 **Javascript**
@@ -54,5 +54,5 @@ More detailed api documentation pending, for now the below explains about all yo
 The following libraries are used in this tool's creation.
 
 + [JQuery 1.7.2+](http://jquery.com) (MIT License)
-+ [Three.js](http://threejs.org/) + Detector (MIT License) - 
++ [Three.js](http://threejs.org/) + Detector (MIT License)
 + [Font Awesome](http://fortawesome.github.io/Font-Awesome/) (MIT License)
