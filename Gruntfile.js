@@ -8,8 +8,8 @@ module.exports = function(grunt) {
     banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+      ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>;' +
+      ' Licensed <%= pkg.license %> */\n',
     // Task configuration.
     concat: {
       options: {
@@ -17,8 +17,8 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['lib/<%= pkg.name %>.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['src/lib/Detector.js', 'src/valiant.jquery.js'],
+        dest: 'build/<%= pkg.name %>.js'
       }
     },
     copy: {
@@ -30,6 +30,11 @@ module.exports = function(grunt) {
           // copy src files 
           { expand: true, src: ["src/*"], dest: "../flimshaw.github.io/Valiant360/src" }
         ]
+      },
+      build: {
+        files: [
+          { expand: true, cwd: 'build/', src: ["*.js"], dest: "demo/build" }
+        ]
       }
     },
     uglify: {
@@ -38,7 +43,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'build/<%= pkg.name %>.min.js'
       }
     },
     jshint: {
@@ -128,9 +133,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-rsync');
+  grunt.loadNpmTasks('grunt-bump');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);
-  grunt.registerTask('build', ['default']);
+  grunt.registerTask('build', ['concat', 'uglify']);
 
 };

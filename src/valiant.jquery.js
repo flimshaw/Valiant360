@@ -13,7 +13,7 @@
 // the semi-colon before the function invocation is a safety 
 // net against concatenated scripts and/or other plugins 
 // that are not closed properly.
-;define(['jquery', 'threejs', 'detector'], function ( $, THREE ) {
+;(function() {
  
     //define the commands that can be used  
     var commands = {  
@@ -371,4 +371,4 @@
         console.info(msg);
     }
 
-});
+})(jQuery);
