@@ -186,7 +186,14 @@
 
         $(self).find(".fullscreenButton").click(function(e) {
             e.preventDefault();
-            $(self)[0].webkitRequestFullScreen();
+            if($(this).hasClass('fa-expand')) {
+                $(this).removeClass('fa-pause').addClass('fa-play');
+                pause();
+            } else {
+                $(this).removeClass('fa-play').addClass('fa-pause');
+                play();
+            }
+            
         });
 
         $(self).find(".muteButton").click(function(e) {
