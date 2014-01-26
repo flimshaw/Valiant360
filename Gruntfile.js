@@ -138,6 +138,6 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);
-  grunt.registerTask('build', ['default', 'concat', 'uglify']);
+  grunt.registerTask('build', ['default', 'copy:build', 'concat', 'uglify']);
 
 };
