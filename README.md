@@ -20,7 +20,7 @@ See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) o
 On the HTML side, create a div to act as your container, and add a data-video-src attribute pointing to the video file you wish to play.
 
 ```
-	<div class=".Valiant360" data-video-src="videos/my-video.mp4"></div>
+	<div class="Valiant360" data-video-src="videos/my-video.mp4"></div>
 ```
 
 **Javascript**
