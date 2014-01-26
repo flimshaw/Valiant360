@@ -55,4 +55,4 @@ The following libraries are used in this tool's creation.
 
 + [JQuery 1.7.2+](http://jquery.com) (MIT License)
 + [Three.js](http://threejs.org/) + Detector (MIT License) - 
-+ [Font Awesome](http://fortawesome.github.io/Font-Awesome/) (MIT License)- http://fortawesome.github.io/Font-Awesome/
++ [Font Awesome](http://fortawesome.github.io/Font-Awesome/) (MIT License)
