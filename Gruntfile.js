@@ -96,6 +96,10 @@ module.exports = function(grunt) {
       main_css: {
         files: 'src/css/*.less',
         tasks: ['less']
+      },
+      dev_css: {
+        files: 'src/valiant.jquery.js',
+        tasks: 'concat'
       }
     },
     rsync: {

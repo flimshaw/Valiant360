@@ -25,7 +25,8 @@ three.js r65 or higher
     var commands = {  
         play: play,  
         stop: pause,
-        fullscreen: fullscreen
+        fullscreen: fullscreen,
+        loadVideo: loadVideo
     };
 
     var defaults = {
@@ -37,6 +38,9 @@ three.js r65 or higher
         debug: false,
         autoplay: true
     }
+
+    // store the time of the script start
+    var time = new Date().getTime();
 
     var controlsHTML = ' \
         <div class="controls"> \
@@ -325,9 +329,9 @@ three.js r65 or higher
       video.pause();
     }
 
-
-    // store the time of the script start
-    var time = new Date().getTime();
+    function loadVideo(videoFile) {
+        video.src = videoFile;
+    }
 
     function animate() {
         // set our animate function to fire next time a frame is ready
@@ -343,12 +347,7 @@ three.js r65 or higher
             }
         }
 
-        var c = $(self).find('canvas')[0];
-        
-
         render();
-
-
 
     }
 

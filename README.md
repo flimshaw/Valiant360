@@ -29,7 +29,7 @@ More detailed api documentation pending, for now the below explains about all yo
 
 ```
 	// initialize plugin, default options shown
-	$('.myVideo').Valiant360({
+	$('.Valiant360').Valiant360({
 		fov: 35, 		// initial field of view
 		lon: 0, 		// initial lon for camera angle
 		lat: 0, 		// initial lat for camera angle
@@ -39,10 +39,13 @@ More detailed api documentation pending, for now the below explains about all yo
 	});
 
 	// play video
-	$('.myVideo').Valiant360('play');
+	$('.Valiant360').Valiant360('play');
 
 	// pause video
-	$('.myVideo').Valiant360('pause');
+	$('.Valiant360').Valiant360('pause');
+
+	// load new video file
+	$('.Valiant360').Valiant360('loadVideo', 'path/to/file.mp4');
 ```
 
 
@@ -50,12 +53,6 @@ More detailed api documentation pending, for now the below explains about all yo
 
 The following libraries are used in this tool's creation.
 
-+ JQuery 1.7.2 (MIT License)
-+ Three.js + stats (MIT License)
-+ Twitter Bootstrap (MIT License) (not strictly necessary at the moment)
-
-The following icons or graphics were used
-http://www.flaticon.com/free-icon/play-button_320 - play button
-http://www.flaticon.com/free-icon/pause-ios-7-interface-symbol_17270 - pause
-http://www.flaticon.com/free-icon/expand-screen_871 - fullscreen icon
-http://www.flaticon.com/packs/elegant-font - mute/unmute icon
++ [JQuery 1.7.2+](http://jquery.com) (MIT License)
++ [Three.js](http://threejs.org/) + Detector (MIT License) - 
++ [Font Awesome](http://fortawesome.github.io/Font-Awesome/) (MIT License)- http://fortawesome.github.io/Font-Awesome/
