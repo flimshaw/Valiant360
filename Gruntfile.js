@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       },
       build: {
         files: [
-          { expand: true, cwd: 'build/', src: ["*.js"], dest: "demo/build" }
+          { expand: true, cwd: 'src/css/fonts/', src: ["*"], dest: "build/css/fonts/" }
         ]
       }
     },
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test', 'qunit']
       },
       main_css: {
-        files: 'demo/css/*.less',
+        files: 'src/css/*.less',
         tasks: ['less']
       }
     },
@@ -114,10 +114,11 @@ module.exports = function(grunt) {
     less: {
       development: {
         options: {
-          paths: ["demo/css"]
+          paths: ["src/css"],
+          cleancss: true 
         },
         files: {
-          "demo/css/main.css": "demo/css/main.less"
+          "build/css/valiant360.css": "src/css/valiant360.less"
         }
       },
     }

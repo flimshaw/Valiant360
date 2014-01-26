@@ -14,17 +14,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 	<head>
 		<title>Valiant 360 Pano Player</title>
 		<meta charset="utf-8">
-		<link rel="stylesheet" type="text/css" href="css/font-awesome.css">
-		<link rel="stylesheet" type="text/css" href="css/animate.css">
-		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="build/css/valiant360.css" />
 
 	</head>
 	<body>
 
 		<div class="Valiant360" data-video-src="videos/overpass-2k.mp4"></div>
 
-		<!--<script type="text/javascript" src="src/lib/require.js" data-main="valiant360.min"></script>-->
-		<script type="text/javascript" src="src/lib/require.js" data-main="src/main"></script>
+		
+		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="build/jquery.valiant360.min.js"></script>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.Valiant360').Valiant360();
+			});
+		</script>
 
 		<script>
 		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

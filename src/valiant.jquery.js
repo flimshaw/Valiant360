@@ -9,6 +9,12 @@
  * Jquery plugin pattern by @ianjmitchell (http://iainjmitchell.com/blog/?p=360)
  */
 
+/* REQUIREMENTS:
+
+jQuery 1.7.2 or greater
+three.js r65 or higher
+
+*/
 
 // the semi-colon before the function invocation is a safety 
 // net against concatenated scripts and/or other plugins 
@@ -32,11 +38,13 @@
         autoplay: true
     }
 
-    var controlsHTML = '<div class="controls"> \
-                <a href="#" class="playButton button fa fa-pause"></a> \
-                <a href="#" class="muteButton button fa fa-volume-off"></a> \
-                <a href="#" class="fullscreenButton button fa fa-expand"></a> \
-            </div>';
+    var controlsHTML = ' \
+        <div class="controls"> \
+            <a href="#" class="playButton button fa fa-pause"></a> \
+            <a href="#" class="muteButton button fa fa-volume-off"></a> \
+            <a href="#" class="fullscreenButton button fa fa-expand"></a> \
+        </div> \
+    ';
 
     var camera
       , scene
