@@ -93,6 +93,19 @@ module.exports = function(grunt) {
         tasks: ['less']
       }
     },
+    rsync: {
+      options: {
+          args: ["--progress"],
+          exclude: [".git*","*.scss","node_modules"],
+          recursive: true
+      },
+      demo: {
+        options: {
+          src: "build/demo/",
+          dest: "../flimshaw.github.io/Valiant360/demo"
+        }
+      }
+    },
     less: {
       development: {
         options: {
@@ -114,6 +127,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-rsync');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);

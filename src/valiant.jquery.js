@@ -195,7 +195,7 @@
         $(self).find(".fullscreenButton").click(function(e) {
             e.preventDefault();
             if($(this).hasClass('fa-expand')) {
-                $(this).removeClass('fa-expand').addClass('fa-compress');
+                
                  $(self)[0].webkitRequestFullscreen();
             } else {
                 $(this).removeClass('fa-compress').addClass('fa-expand');
@@ -285,8 +285,8 @@
             var h = self.originalHeight;
             isFullscreen = false;
         } else {
-            var w = screen.availWidth;
-            var h = screen.availHeight;
+            var w = screen.width;
+            var h = screen.height;
             isFullscreen = true;
         }
 
@@ -296,8 +296,10 @@
 
         if(isFullscreen) {
             $(self).addClass('fullscreen');
+            $(self).find('a.fa-expand').removeClass('fa-expand').addClass('fa-compress');
         } else {
             $(self).removeClass('fullscreen');
+            $(self).find('a.fa-compress').removeClass('fa-compress').addClass('fa-expand');
         }
     }
 
