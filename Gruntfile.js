@@ -69,6 +69,16 @@ module.exports = function(grunt) {
     qunit: {
       files: ['test/**/*.html']
     },
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: "src/",
+          mainConfigFile: "src/main.js",
+          name: "main", // assumes a production build using almond
+          out: "demo/valiant360.min.js"
+        }
+      }
+    },
     watch: {
       gruntfile: {
         files: '<%= jshint.gruntfile.src %>',
@@ -103,8 +113,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);
+  grunt.registerTask('build', ['default']);
 
 };

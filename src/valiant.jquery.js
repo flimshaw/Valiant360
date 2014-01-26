@@ -32,6 +32,12 @@
         autoplay: true
     }
 
+    var controlsHTML = '<div class="controls"> \
+                <a href="#" class="playButton button fa fa-pause"></a> \
+                <a href="#" class="muteButton button fa fa-volume-off"></a> \
+                <a href="#" class="fullscreenButton button fa fa-expand"></a> \
+            </div>';
+
     var camera
       , scene
       , renderer
@@ -67,6 +73,8 @@
         // save original width of our container
         this.originalWidth = $(this).find('canvas').width();
         this.originalHeight = $(this).find('canvas').height();
+
+
 
         return this;  
     };
@@ -149,16 +157,16 @@
             log("playing");
         });
 
-        // wire up controller events to dom elements
-        attachControlEvents();
-
         // set the video src and begin loading
         video.src = this.attr('data-video-src');
     }
 
     // create separate webgl layer and scene for drawing onscreen controls
     function createControls(options) {
-         
+         this.append(controlsHTML, true);
+
+        // wire up controller events to dom elements
+        attachControlEvents();
     }
 
     function attachControlEvents() {
@@ -187,11 +195,11 @@
         $(self).find(".fullscreenButton").click(function(e) {
             e.preventDefault();
             if($(this).hasClass('fa-expand')) {
-                $(this).removeClass('fa-pause').addClass('fa-play');
-                pause();
+                $(this).removeClass('fa-expand').addClass('fa-compress');
+                 $(self)[0].webkitRequestFullscreen();
             } else {
-                $(this).removeClass('fa-play').addClass('fa-pause');
-                play();
+                $(this).removeClass('fa-compress').addClass('fa-expand');
+                document.webkitExitFullscreen();
             }
             
         });
