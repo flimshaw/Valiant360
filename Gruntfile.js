@@ -36,6 +36,12 @@ module.exports = function(grunt) {
         ]
       }
     },
+    bump: {
+      options: {
+        commit: false,
+        push: false
+      }
+    },
     uglify: {
       options: {
         banner: '<%= banner %>'
