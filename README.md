@@ -20,7 +20,7 @@ See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) o
 On the HTML side, create a div to act as your container, and add a data-video-src attribute pointing to the video file you wish to play.
 
 ```
-	<div class="Valiant360" data-video-src="videos/my-video.mp4"></div>
+	<div class="valiantContainer" data-video-src="videos/my-video.mp4"></div>
 ```
 
 **Javascript**
@@ -29,7 +29,7 @@ More detailed api documentation pending, for now the below explains about all yo
 
 ```
 	// initialize plugin, default options shown
-	$('.Valiant360').Valiant360({
+	$('.valiantContainer').Valiant360({
 		fov: 35, 		// initial field of view
 		lon: 0, 		// initial lon for camera angle
 		lat: 0, 		// initial lat for camera angle
@@ -39,13 +39,13 @@ More detailed api documentation pending, for now the below explains about all yo
 	});
 
 	// play video
-	$('.Valiant360').Valiant360('play');
+	$('.valiantContainer').Valiant360('play');
 
 	// pause video
-	$('.Valiant360').Valiant360('pause');
+	$('.valiantContainer').Valiant360('pause');
 
 	// load new video file
-	$('.Valiant360').Valiant360('loadVideo', 'path/to/file.mp4');
+	$('.valiantContainer').Valiant360('loadVideo', 'path/to/file.mp4');
 ```
 
 

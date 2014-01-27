@@ -25,7 +25,8 @@ module.exports = function(grunt) {
       build: {
         files: [
           { expand: true, cwd: 'src/css/fonts/', src: ["*"], dest: "build/css/fonts/" },
-          { src: ['README.md'], dest: "build/README.md"}
+          { expand: true, cwd: 'demo/js', src: ["three.min.js", "jquery-1.7.2.min.js"], dest: "build/js" },
+          { src: ['README.md'], dest: "build/README.md" }
         ]
       },
       to_site: {
@@ -153,6 +154,6 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);
   grunt.registerTask('build', ['default', 'copy:build', 'concat', 'uglify']);
-  grunt.registerTask('deploy', ['default', 'copy:build', 'concat', 'uglify', 'zip']);
+  grunt.registerTask('deploy', ['default', 'copy:build', 'concat', 'uglify', 'compress', 'copy:to_site']);
 
 };
