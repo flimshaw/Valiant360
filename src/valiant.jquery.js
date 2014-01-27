@@ -42,6 +42,7 @@ three.js r65 or higher
     // store the time of the script start
     var time = new Date().getTime();
 
+    // html for control elements, gets appended to container div on load
     var controlsHTML = ' \
         <div class="controls"> \
             <a href="#" class="playButton button fa fa-pause"></a> \

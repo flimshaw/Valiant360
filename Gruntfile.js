@@ -24,7 +24,14 @@ module.exports = function(grunt) {
     copy: {
       build: {
         files: [
-          { expand: true, cwd: 'src/css/fonts/', src: ["*"], dest: "build/css/fonts/" }
+          { expand: true, cwd: 'src/css/fonts/', src: ["*"], dest: "build/css/fonts/" },
+          { src: ['README.md'], dest: "build/README.md"}
+        ]
+      },
+      to_site: {
+        files: [
+          { expand: true, cwd: 'build/', src: ["**"], dest: "../flimshaw.github.io/Valiant360/build" },
+          { expand: true, cwd: 'dist/', src: ["<%= pkg.name %>_<%= pkg.version %>.zip"], dest: "../flimshaw.github.io/Valiant360/download/" }
         ]
       }
     },
@@ -93,6 +100,17 @@ module.exports = function(grunt) {
         tasks: 'concat'
       }
     },
+    // gzip assets 1-to-1 for production
+    compress: {
+      main: {
+        options: {
+          archive: 'dist/<%= pkg.name %>_<%= pkg.version %>.zip'
+        },
+        files: [
+          { expand: true, cwd: 'build/', src: ['**/*'], dest: './valiant360' }
+        ]
+      }
+    },
     rsync: {
       options: {
           args: ["--progress"],
@@ -120,6 +138,7 @@ module.exports = function(grunt) {
   });
 
   // These plugins provide necessary tasks.
+  grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -134,5 +153,6 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint', 'less']);
   grunt.registerTask('build', ['default', 'copy:build', 'concat', 'uglify']);
+  grunt.registerTask('deploy', ['default', 'copy:build', 'concat', 'uglify', 'zip']);
 
 };
