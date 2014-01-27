@@ -291,6 +291,10 @@ three.js r65 or higher
         }        
     }
 
+    $(window).resize(function() {
+        resizeGL($(self).width(), $(self).height());
+    });
+
     function fullscreen() {
 
         if(!window.screenTop && !window.screenY) {
@@ -303,9 +307,7 @@ three.js r65 or higher
             isFullscreen = true;
         }
 
-        renderer.setSize(w, h);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
+        resizeGL(w, h);
 
         if(isFullscreen) {
             $(self).addClass('fullscreen');
@@ -314,6 +316,12 @@ three.js r65 or higher
             $(self).removeClass('fullscreen');
             $(self).find('a.fa-compress').removeClass('fa-compress').addClass('fa-expand');
         }
+    }
+
+    function resizeGL(w, h) {
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();        
     }
 
     $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
