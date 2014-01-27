@@ -86,7 +86,7 @@ three.js r65 or higher
         this.originalWidth = $(this).find('canvas').width();
         this.originalHeight = $(this).find('canvas').height();
 
-
+        $(self).addClass('Valiant360_default');
 
         return this;  
     };

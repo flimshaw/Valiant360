@@ -22,15 +22,6 @@ module.exports = function(grunt) {
       }
     },
     copy: {
-      demo: {
-        files: [
-          // copy demo files to flimshaw hosting
-          { expand: true, cwd: 'demo/', src: ["**"], dest: "../flimshaw.github.io/Valiant360/" },
-
-          // copy src files 
-          { expand: true, src: ["src/*"], dest: "../flimshaw.github.io/Valiant360/src" }
-        ]
-      },
       build: {
         files: [
           { expand: true, cwd: 'src/css/fonts/', src: ["*"], dest: "build/css/fonts/" }
