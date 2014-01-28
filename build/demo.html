@@ -16,22 +16,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		<meta charset="utf-8">
 
 		<!-- Valiant360 control styles -->
-		<link rel="stylesheet" type="text/css" href="build/css/valiant360.css" />
+		<link rel="stylesheet" type="text/css" href="css/valiant360.css" />
 
 	</head>
 	<body>
 
-		<div class="valiantContainer" data-video-src="videos/overpass-clip.mp4" style="width: 720px; height: 480px;"></div>
+		<div class="valiant" data-photo-src="mars-scaled.jpg" data-video-src="videos/overpass-clip.mp4" style="width: 720px; height: 480px;"></div>
 		
 		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="js/three.min.js"></script>
 
 		<!-- Valiant360 plugin, load after jQuery and Three.js -->
-		<script type="text/javascript" src="build/jquery.valiant360.js"></script>
+		<script type="text/javascript" src="jquery.valiant360.js"></script>
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('.valiantContainer').Valiant360();
+				$('.valiant').Valiant360();
 			});
 		</script>
 

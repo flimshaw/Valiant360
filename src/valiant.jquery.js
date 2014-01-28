@@ -54,7 +54,8 @@ three.js r65 or higher
     var camera
       , scene
       , renderer
-      , video
+      , video = false
+      , photo = false
       , texture
       , texture_placeholder
       , self
@@ -115,13 +116,24 @@ three.js r65 or higher
         renderer.setClearColor( 0xffffff, 1 );
         this.append(renderer.domElement);
 
-        // create off-dom video player
-        video = document.createElement( 'video' );
-        video.loop = this.options.loop;
-        video.muted = this.options.muted;
+        if($(self).attr('data-photo-src')) {
+            photo = document.createElement( 'img' );
+        } else {
+            // create off-dom video player
+            video = document.createElement( 'video' );
+            video.loop = this.options.loop;
+            video.muted = this.options.muted;            
+        }
+        
+
 
         // create ThreeJS texture and high performance defaults
-        texture = new THREE.Texture( video );
+        if(photo != false) {
+            texture = new THREE.Texture( photo );
+        } else {
+            texture = new THREE.Texture( video ); 
+        }
+        
         texture.generateMipmaps = false;
         texture.minFilter = THREE.LinearFilter;
         texture.magFilter = THREE.LinearFilter;
@@ -132,46 +144,53 @@ three.js r65 or higher
         mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
         scene.add(mesh);
 
-        // attach video player event listeners
-        video.addEventListener("ended", function(e) {
-            log("video loaded");
-        });
+        if(video != false) {
 
-        // Progress Meter
-        video.addEventListener("progress", function(e) {
-            var percent = null;
-                if (video && video.buffered && video.buffered.length > 0 && video.buffered.end && video.duration) {
-                    percent = video.buffered.end(0) / video.duration;
-                } 
-                // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
-                // to be anything other than 0. If the byte count is available we use this instead.
-                // Browsers that support the else if do not seem to have the bufferedBytes value and
-                // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-                else if (video && video.bytesTotal != undefined && video.bytesTotal > 0 && video.bufferedBytes != undefined) {
-                    percent = video.bufferedBytes / video.bytesTotal;
+            // attach video player event listeners
+            video.addEventListener("ended", function(e) {
+                log("video loaded");
+            });
+
+            // Progress Meter
+            video.addEventListener("progress", function(e) {
+                var percent = null;
+                    if (video && video.buffered && video.buffered.length > 0 && video.buffered.end && video.duration) {
+                        percent = video.buffered.end(0) / video.duration;
+                    } 
+                    // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
+                    // to be anything other than 0. If the byte count is available we use this instead.
+                    // Browsers that support the else if do not seem to have the bufferedBytes value and
+                    // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
+                    else if (video && video.bytesTotal != undefined && video.bytesTotal > 0 && video.bufferedBytes != undefined) {
+                        percent = video.bufferedBytes / video.bytesTotal;
+                    }
+
+                    var cpct = Math.round(percent * 100);
+                    if(cpct == 100) {
+                        // do something now that we are done
+                    } else {
+                        // do something with this percentage info (cpct)
+                    }
+            });
+
+            // Video Play Listener, fires after video loads
+            video.addEventListener("canplaythrough", function(e) {
+
+                if(self.options.autoplay == true) {
+                    video.play(); 
                 }
+                
+                animate();
+                log("playing");
+            });
 
-                var cpct = Math.round(percent * 100);
-                if(cpct == 100) {
-                    // do something now that we are done
-                } else {
-                    // do something with this percentage info (cpct)
-                }
-        });
+            // set the video src and begin loading
+            video.src = this.attr('data-video-src');            
+        } else if(photo != false) {
+            photo.onload = animate;
+            photo.src = $(self).attr('data-photo-src');
+        }
 
-        // Video Play Listener, fires after video loads
-        video.addEventListener("canplaythrough", function(e) {
-
-            if(self.options.autoplay == true) {
-                video.play(); 
-            }
-            
-            animate();
-            log("playing");
-        });
-
-        // set the video src and begin loading
-        video.src = this.attr('data-video-src');
     }
 
     // create separate webgl layer and scene for drawing onscreen controls
