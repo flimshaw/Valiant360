@@ -31,11 +31,13 @@ three.js r65 or higher
 
     var defaults = {
         fov: 35,
+        hideControls: false,
         lon: 0,
         lat: 0,
         loop: "loop",
         muted: true,
         debug: false,
+        flatProjection: false,
         autoplay: true
     }
 
@@ -102,6 +104,11 @@ three.js r65 or higher
         lat = this.options.lat;
         lon = this.options.lon;
         fov = this.options.fov;
+
+        // hide controls if they need to be
+        if(this.options.hideControls) {
+
+        }
 
         // create ThreeJS scene
         scene = new THREE.Scene();
@@ -195,7 +202,11 @@ three.js r65 or higher
 
     // create separate webgl layer and scene for drawing onscreen controls
     function createControls(options) {
-         this.append(controlsHTML, true);
+        this.append(controlsHTML, true);
+
+        if(this.options.hideControls) {
+            $(self).find('.controls').hide();
+        }
 
         // wire up controller events to dom elements
         attachControlEvents();
@@ -271,7 +282,7 @@ three.js r65 or higher
             onPointerDownLat = lat;
             
 
-            if($(self).find('canvas').is(":hover")) {
+            if($(self).is(":hover")) {
                 var x = event.pageX - $(self).find('canvas').offset().left;
                 var y = event.pageY - $(self).find('canvas').offset().top;
                 lon = ( x / $(self).find('canvas').width() ) * 430 - 225
@@ -410,9 +421,15 @@ three.js r65 or higher
         camera.lookAt(new THREE.Vector3(cx, cy, cz));
 
         // distortion
-        camera.position.x = - cx;
-        camera.position.y = - cy;
-        camera.position.z = - cz;
+        if(self.options.flatProjection) {
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 0;
+        } else {
+            camera.position.x = - cx;
+            camera.position.y = - cy;
+            camera.position.z = - cz;            
+        }
 
         renderer.clear();
         renderer.render( scene, camera );
