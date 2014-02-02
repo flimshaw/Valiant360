@@ -30,6 +30,7 @@ three.js r65 or higher
     };
 
     var defaults = {
+        clickAndDrag: false,
         fov: 35,
         hideControls: false,
         lon: 0,
@@ -64,7 +65,9 @@ three.js r65 or higher
       , lat
       , lon
       , fov
-      , isFullscreen = false;
+      , isFullscreen = false
+      , mouseDown = false
+      , dragStart = {};
 
     var controls = {};
   
@@ -204,6 +207,7 @@ three.js r65 or higher
     function createControls(options) {
         this.append(controlsHTML, true);
 
+        // hide controls if option is set
         if(this.options.hideControls) {
             $(self).find('.controls').hide();
         }
@@ -216,6 +220,8 @@ three.js r65 or higher
 
         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
         document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+        document.addEventListener( 'mousedown', onDocumentMouseDown, false);
+        document.addEventListener( 'mouseup', onDocumentMouseUp, false);
         document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
 
         // CONTROLS
@@ -273,6 +279,16 @@ three.js r65 or higher
             }
         });
 
+        function onDocumentMouseUp( event ) {
+            mouseDown = false;
+        }
+
+        function onDocumentMouseDown( event ) {
+            mouseDown = true;
+            dragStart.x = event.pageX;
+            dragStart.y = event.pageY;
+        }
+
         // attach mouse listeners
         function onDocumentMouseMove( event ) {
             onPointerDownPointerX = event.clientX;
@@ -281,13 +297,24 @@ three.js r65 or higher
             onPointerDownLon = lon;
             onPointerDownLat = lat;
             
-
-            if($(self).is(":hover")) {
-                var x = event.pageX - $(self).find('canvas').offset().left;
-                var y = event.pageY - $(self).find('canvas').offset().top;
-                lon = ( x / $(self).find('canvas').width() ) * 430 - 225
-                lat = ( y / $(self).find('canvas').height() ) * -180 + 90                
+            if(self.options.clickAndDrag) {
+                if(mouseDown) {
+                    var x = event.pageX - dragStart.x;
+                    var y = event.pageY - dragStart.y;
+                    dragStart.x = event.pageX;
+                    dragStart.y = event.pageY;
+                    lon += x;
+                    lat -= y;                 
+                }
+            } else {
+                if($(self).is(":hover")) {
+                    var x = event.pageX - $(self).find('canvas').offset().left;
+                    var y = event.pageY - $(self).find('canvas').offset().top;
+                    lon = ( x / $(self).find('canvas').width() ) * 430 - 225
+                    lat = ( y / $(self).find('canvas').height() ) * -180 + 90                
+                }    
             }
+
             
         }
 
@@ -326,8 +353,7 @@ three.js r65 or higher
                 fov = fovMax;
             }
 
-
-            if($(self).find('canvas').is(":hover")) {
+            if($(self).is(":hover")) {
                 camera.setLens(fov);
                 event.preventDefault();
             }
