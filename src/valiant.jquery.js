@@ -26,7 +26,8 @@ three.js r65 or higher
         play: play,  
         stop: pause,
         fullscreen: fullscreen,
-        loadVideo: loadVideo
+        loadVideo: loadVideo,
+        loadPhoto: loadPhoto
     };
 
     var defaults = {
@@ -134,8 +135,6 @@ three.js r65 or higher
             video.loop = this.options.loop;
             video.muted = this.options.muted;            
         }
-        
-
 
         // create ThreeJS texture and high performance defaults
         if(photo != false) {
@@ -198,6 +197,7 @@ three.js r65 or higher
             video.src = this.attr('data-video-src');            
         } else if(photo != false) {
             photo.onload = animate;
+            photo.crossOrigin='anonymous';
             photo.src = $(self).attr('data-photo-src');
         }
 
@@ -414,6 +414,10 @@ three.js r65 or higher
 
     function loadVideo(videoFile) {
         video.src = videoFile;
+    }
+
+    function loadPhoto(photoFile) {
+        photo.src = photoFile;
     }
 
     function animate() {

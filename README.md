@@ -1,6 +1,6 @@
 ## Valiant 360 (beta)
 
-### A browser-based video player for 360 degree panorama videos.
+### A browser-based video player for 360 degree panorama videos and photos.
 
 [Example](http://flimshaw.github.io/Valiant360) - [Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
 
@@ -23,6 +23,11 @@ On the HTML side, create a div to act as your container, and add a data-video-sr
 	<div class="valiantContainer" data-video-src="videos/my-video.mp4"></div>
 ```
 
+Or, if you wish to use it to view a photo
+```
+	<div class="valiantContainer" data-photo-src="videos/my-photo.jpg"></div>
+```
+
 **Javascript**
 
 More detailed api documentation pending, for now the below explains about all you can do.
@@ -30,12 +35,15 @@ More detailed api documentation pending, for now the below explains about all yo
 ```
 	// initialize plugin, default options shown
 	$('.valiantContainer').Valiant360({
-		fov: 35, 		// initial field of view
-		lon: 0, 		// initial lon for camera angle
-		lat: 0, 		// initial lat for camera angle
-		loop: "loop", 	// video loops by default
-		muted: true,	// video muted by default
-		autoplay: true	// video autoplays by default
+		clickAndDrag: false,	// use click-and-drag camera controls
+		flatProjection: false,	// map image to appear flat (often more distorted)
+		fov: 35, 				// initial field of view
+		hideControls: false,	// hide player controls
+		lon: 0, 				// initial lon for camera angle
+		lat: 0, 				// initial lat for camera angle
+		loop: "loop", 			// video loops by default
+		muted: true,			// video muted by default
+		autoplay: true			// video autoplays by default
 	});
 
 	// play video
@@ -46,6 +54,7 @@ More detailed api documentation pending, for now the below explains about all yo
 
 	// load new video file
 	$('.valiantContainer').Valiant360('loadVideo', 'path/to/file.mp4');
+
 ```
 
 
