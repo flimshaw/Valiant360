@@ -226,12 +226,27 @@ three.js r65 or higher
 
         $(self).find(".fullscreenButton").click(function(e) {
             e.preventDefault();
+            var elem = $(self)[0];
             if($(this).hasClass('fa-expand')) {
-                
-                 $(self)[0].webkitRequestFullscreen();
+                if (elem.requestFullscreen) {
+                  elem.requestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                  elem.msRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                  elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                  elem.webkitRequestFullscreen();
+                }
             } else {
-                $(this).removeClass('fa-compress').addClass('fa-expand');
-                document.webkitExitFullscreen();
+                if (elem.requestFullscreen) {
+                  document.exitFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                  document.msExitFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                  document.mozCancelFullScreen();
+                } else if (elem.webkitRequestFullscreen) {
+                  document.webkitExitFullscreen();
+                }
             }
             
         });
@@ -305,8 +320,7 @@ three.js r65 or higher
                 camera.setLens(fov);
                 event.preventDefault();
             }
-            
-
+        
         }        
     }
 
@@ -324,6 +338,10 @@ three.js r65 or higher
             var w = screen.width;
             var h = screen.height;
             isFullscreen = true;
+        }
+
+        if(typeof(document.fullscreenElement) !== "undefined") {
+            isFullscreen =  true;
         }
 
         resizeGL(w, h);
