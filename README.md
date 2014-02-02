@@ -23,7 +23,7 @@ On the HTML side, create a div to act as your container, and add a data-video-sr
 	<div class="valiantContainer" data-video-src="videos/my-video.mp4"></div>
 ```
 
-Or, if you wish to use it to view a photo
+Or, if you wish to use it to view a photo:
 ```
 	<div class="valiantContainer" data-photo-src="videos/my-photo.jpg"></div>
 ```
@@ -55,13 +55,18 @@ More detailed api documentation pending, for now the below explains about all yo
 	// load new video file
 	$('.valiantContainer').Valiant360('loadVideo', 'path/to/file.mp4');
 
+	// load new photo file
+	$('.valiantContainer').Valiant360('loadPhoto', 'path/to/file.jpg');
+
 ```
 
 
 #### 3rd party libraries and their licenses
 
-The following libraries are used in this tool's creation.
+The following assets are used in this tool's creation.
 
 + [JQuery 1.7.2+](http://jquery.com) (MIT License)
 + [Three.js](http://threejs.org/) + Detector (MIT License)
 + [Font Awesome](http://fortawesome.github.io/Font-Awesome/) (MIT License)
+
++ [Demo photograph]
