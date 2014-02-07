@@ -46,15 +46,6 @@ three.js r65 or higher
     // store the time of the script start
     var time = new Date().getTime();
 
-    /*// html for control elements, gets appended to container div on load
-    var controlsHTML = ' \
-        <div class="controls"> \
-            <a href="#" class="playButton button fa fa-pause"></a> \
-            <a href="#" class="muteButton button fa fa-volume-off"></a> \
-            <a href="#" class="fullscreenButton button fa fa-expand"></a> \
-        </div> \
-    ';*/
-
     var camera
       , scene
       , renderer
@@ -71,6 +62,8 @@ three.js r65 or higher
       , dragStart = {};
 
     var controls = {};
+
+    // html for control elements, gets appended to container div on load
     var controlsHTML = '';
 
     $.fn.Valiant360 = function() {
@@ -210,7 +203,6 @@ three.js r65 or higher
     	var muteControl = self.options.muted ? 'fa-volume-off' : 'fa-volume-up';
     	var playPauseControl = self.options.autoplay ? 'fa-pause' : 'fa-play';
 
-    	// html for control elements, gets appended to container div on load
 	    controlsHTML = ' \
 	        <div class="controls"> \
 	            <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
