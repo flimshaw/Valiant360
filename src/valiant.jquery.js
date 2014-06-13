@@ -370,11 +370,11 @@ three.js r65 or higher
         if(!window.screenTop && !window.screenY) {
             var w = self.originalWidth;
             var h = self.originalHeight;
-            isFullscreen = false;
+            isFullscreen = true;
         } else {
             var w = screen.width;
             var h = screen.height;
-            isFullscreen = true;
+            isFullscreen = false;
         }
 
         if(typeof(document.fullscreenElement) !== "undefined") {
