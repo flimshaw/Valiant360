@@ -372,29 +372,20 @@ three.js r65 or higher
     });
 
     function fullscreen() {
+        if(!window.screenTop && !window.screenY && $(self).find('a.fa-expand').length > 0) {
+            resizeGL(screen.width, screen.height);
 
-        if(!window.screenTop && !window.screenY) {
-            var w = self.originalWidth;
-            var h = self.originalHeight;
-            isFullscreen = false;
-        } else {
-            var w = screen.width;
-            var h = screen.height;
-            isFullscreen = true;
-        }
-
-        if(typeof(document.fullscreenElement) !== "undefined") {
-            isFullscreen =  true;
-        }
-
-        resizeGL(w, h);
-
-        if(isFullscreen) {
             $(self).addClass('fullscreen');
             $(self).find('a.fa-expand').removeClass('fa-expand').addClass('fa-compress');
+
+            isFullscreen = true;
         } else {
+            resizeGL(self.originalWidth, self.originalHeight);
+
             $(self).removeClass('fullscreen');
             $(self).find('a.fa-compress').removeClass('fa-compress').addClass('fa-expand');
+
+            isFullscreen = false;
         }
     }
 
