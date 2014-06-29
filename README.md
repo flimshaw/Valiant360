@@ -23,7 +23,7 @@ On the HTML side, create a div to act as your container, and add a data-video-sr
 	<div class="valiantContainer" data-video-src="videos/my-video.mp4"></div>
 ```
 
-Or, if you wish to use it to view a photo:
+Or, if you wish to use it to view a photo (note: currently must be powers-of-2 resolution (ie. 2048x1024):
 ```
 	<div class="valiantContainer" data-photo-src="videos/my-photo.jpg"></div>
 ```
