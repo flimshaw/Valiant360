@@ -122,18 +122,14 @@ three.js r65 or higher
         this.append(renderer.domElement);
 
         if($(self).attr('data-photo-src')) {
-            photo = document.createElement( 'img' );
+            texture = THREE.ImageUtils.loadTexture($(self).attr('data-photo-src'));
+            photo = true;
+            animate();
         } else {
             // create off-dom video player
             video = document.createElement( 'video' );
             video.loop = this.options.loop;
             video.muted = this.options.muted;
-        }
-
-        // create ThreeJS texture and high performance defaults
-        if(photo != false) {
-            texture = new THREE.Texture( photo );
-        } else {
             texture = new THREE.Texture( video );
         }
 
@@ -147,7 +143,8 @@ three.js r65 or higher
         mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
         scene.add(mesh);
 
-        if(video != false) {
+        // if we have a video, attach our controls etc
+        if(video) {
 
             // attach video player event listeners
             video.addEventListener("ended", function(e) {
@@ -421,7 +418,7 @@ three.js r65 or higher
         // set our animate function to fire next time a frame is ready
         requestAnimationFrame( animate );
 
-        if ( video.readyState === video.HAVE_ENOUGH_DATA) {
+        if ( video.readyState === video.HAVE_ENOUGH_DATA && !photo) {
             if(typeof(texture) != "undefined" ) {
                 var ct = new Date().getTime();
                 if(ct - time >= 30) {
