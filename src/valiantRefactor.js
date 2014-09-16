@@ -68,6 +68,7 @@
             // instantiate some local variables we're going to need
             this._time = new Date().getTime();
             this._controls = {};
+            this._id = this.generateUUID();
 
             this._isVideo = false;
             this._isPhoto = false;
@@ -79,8 +80,22 @@
             this._lon = this.options.lon;
             this._fov = this.options.fov;
 
-            this.createMediaPlayer();
+            // add a class to our element so it inherits the appropriate styles
+            $(this.element).addClass('Valiant360_default');
 
+            this.createMediaPlayer();
+            this.createControls();
+
+        },
+
+        generateUUID: function(){
+            var d = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = (d + Math.random()*16)%16 | 0;
+                d = Math.floor(d/16);
+                return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+            });
+            return uuid;
         },
 
         createMediaPlayer: function() {
@@ -172,6 +187,54 @@
             this.animate();
         },
 
+        // creates div and buttons for onscreen video controls
+        createControls: function() {
+
+            var muteControl = this.options.muted ? 'fa-volume-off' : 'fa-volume-up';
+            var playPauseControl = this.options.autoplay ? 'fa-pause' : 'fa-play';
+
+            var controlsHTML = ' \
+                <div class="controls"> \
+                    <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
+                    <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
+                    <a href="#" class="fullscreenButton button fa fa-expand"></a> \
+                </div> \
+            ';
+
+            $(this.element).append(controlsHTML, true);
+
+            // hide controls if option is set
+            if(this.options.hideControls) {
+                $(this.element).find('.controls').hide();
+            }
+
+            // wire up controller events to dom elements
+            this.attachControlEvents();
+        },
+
+        attachControlEvents: function() {
+            document.addEventListener( 'mousemove', this.onMouseMove, false );
+            document.addEventListener( 'mousewheel DOMMouseScroll', this.onMouseWheel, false );
+            document.addEventListener( 'mousedown', this.onMouseDown, false);
+            document.addEventListener( 'mouseup', this.onMouseUp, false);
+        },
+
+        onMouseMove: function(e) {
+
+        }, 
+
+        onMouseWheel: function(e) {
+
+        },
+
+        onMouseDown: function(e) {
+
+        },
+
+        onMouseUp: function(e) {
+
+        },
+
         animate: function() {
             // set our animate function to fire next time a frame is ready
             requestAnimationFrame( this.animate.bind(this) );
@@ -216,10 +279,6 @@
             this._renderer.clear();
             this._renderer.render( this._scene, this._camera );
         },
-
-        createControls: function() {
-
-        }
 
     };
 
