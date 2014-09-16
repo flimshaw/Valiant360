@@ -69,11 +69,14 @@ module.exports = function(grunt) {
         browser: true,
         globals: {
           jQuery: true,
-          console: true
+          console: true,
+          THREE: true,
+          Detector: true,
+          requestAnimationFrame: true
         }
       },
       lib: {
-        src: 'src/valiant.jquery.js'
+        src: 'src/valiantRefactor.js'
       },
       gruntfile: {
         src: 'Gruntfile.js'

@@ -65,13 +65,6 @@ three.js r65 or higher
     // html for control elements, gets appended to container div on load
     var controlsHTML = '';
 
-    $.fn.TestPlugin = function() {
-
-        this.data("testVar", Math.random());
-        this.data("testFunc", function(hello) { console.log("Oh: " + hello); });
-        return this;
-    };
-
     $.fn.Valiant360 = function() {
 
         // if we're passing a string in, do some stuff to it.
@@ -129,7 +122,6 @@ three.js r65 or higher
         if($(self).attr('data-photo-src')) {
             this.texture = THREE.ImageUtils.loadTexture($(self).attr('data-photo-src'));
             this.photo = true;
-            this.animate();
         } else {
             // create off-dom video player
             this.video = $(self).append(document.createElement( 'video' ));
