@@ -5,16 +5,14 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
+    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+      ' <%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
       ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>;' +
-      ' Licensed <%= pkg.license %> */\n',
+      ' Licensed <%= pkg.license %> */\n\n',
     // Task configuration.
     concat: {
       options: {
-        banner: '<%= banner %>',
-        stripBanners: true
+        banner: '<%= banner %>'
       },
       dist: {
         src: ['src/lib/Detector.js', 'src/valiant.jquery.js'],
