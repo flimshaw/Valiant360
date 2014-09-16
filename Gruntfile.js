@@ -64,10 +64,16 @@ module.exports = function(grunt) {
         unused: true,
         boss: true,
         eqnull: true,
+        laxcomma: true,
+        multistr: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          console: true
         }
+      },
+      lib: {
+        src: 'src/valiant.jquery.js'
       },
       gruntfile: {
         src: 'Gruntfile.js'
@@ -102,9 +108,9 @@ module.exports = function(grunt) {
         files: 'src/css/*.less',
         tasks: ['less']
       },
-      dev_css: {
-        files: 'src/valiant.jquery.js',
-        tasks: 'concat'
+      dev_js: {
+        files: ['src/valiant.jquery.js', 'src/valiantRefactor.js'],
+        tasks: ['jshint:lib', 'concat']
       }
     },
     // gzip assets 1-to-1 for production

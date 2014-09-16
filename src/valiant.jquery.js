@@ -19,15 +19,29 @@ three.js r65 or higher
 // the semi-colon before the function invocation is a safety
 // net against concatenated scripts and/or other plugins
 // that are not closed properly.
-;(function() {
+;(function($, THREE, Detector, requestAnimationFrame) {
+
+    var camera
+      , scene
+      , renderer
+      , video = false
+      , photo = false
+      , texture
+      , self = {}
+      , lat
+      , lon
+      , fov
+      , isFullscreen = false
+      , mouseDown = false
+      , dragStart = {};
 
     //define the commands that can be used
     var commands = {
-        play: play,
-        stop: pause,
-        fullscreen: fullscreen,
-        loadVideo: loadVideo,
-        loadPhoto: loadPhoto
+        //play: self.play,
+        //stop: self.pause,
+        //fullscreen: self.fullscreen,
+        //loadVideo: self.loadVideo,
+        //loadPhoto: self.loadPhoto
     };
 
     var defaults = {
@@ -41,45 +55,36 @@ three.js r65 or higher
         debug: false,
         flatProjection: false,
         autoplay: true
-    }
+    };
 
     // store the time of the script start
-    var time = new Date().getTime();
+    self.time = new Date().getTime();
 
-    var camera
-      , scene
-      , renderer
-      , video = false
-      , photo = false
-      , texture
-      , texture_placeholder
-      , self
-      , lat
-      , lon
-      , fov
-      , isFullscreen = false
-      , mouseDown = false
-      , dragStart = {};
-
-    var controls = {};
+    self.controls = {};
 
     // html for control elements, gets appended to container div on load
     var controlsHTML = '';
 
+    $.fn.TestPlugin = function() {
+
+        this.data("testVar", Math.random());
+        this.data("testFunc", function(hello) { console.log("Oh: " + hello); });
+        return this;
+    };
+
     $.fn.Valiant360 = function() {
 
+        // if we're passing a string in, do some stuff to it.
         if (typeof arguments[0] === 'string') {
-
-            //execute string comand on mediaPlayer
-            var property = arguments[1];
 
             //remove the command name from the arguments
             var args = Array.prototype.slice.call(arguments);
             args.splice(0, 1);
 
             commands[arguments[0]].apply(this, args);
+        // but, really, we should be passing an object in, so this is all that really matters
         }  else {
-            //create mediaPlayer
+            // crete a media player using the options passed into this
             createMediaPlayer.apply(this, arguments);
             createControls.apply(this, arguments);
         }
@@ -99,9 +104,9 @@ three.js r65 or higher
 
         this.options = $.extend( {}, defaults, options) ;
 
-        lat = this.options.lat;
-        lon = this.options.lon;
-        fov = this.options.fov;
+        this.lat = this.options.lat;
+        this.lon = this.options.lon;
+        this.fov = this.options.fov;
 
         // hide controls if they need to be
         if(this.options.hideControls) {
@@ -109,64 +114,65 @@ three.js r65 or higher
         }
 
         // create ThreeJS scene
-        scene = new THREE.Scene();
+        this.scene = new THREE.Scene();
 
         // create ThreeJS camera
-        camera = new THREE.PerspectiveCamera( this.options.fov, this.width() / this.height(), .1, 1000);
+        this.camera = new THREE.PerspectiveCamera( this.options.fov, this.width() / this.height(), 0.1, 1000);
 
         // create ThreeJS renderer and append it to our object
-        renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
-        renderer.setSize( this.width(), this.height() );
-        renderer.autoClear = false;
-        renderer.setClearColor( 0xffffff, 1 );
+        this.renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
+        this.renderer.setSize( this.width(), this.height() );
+        this.renderer.autoClear = false;
+        this.renderer.setClearColor( 0xffffff, 1 );
         this.append(renderer.domElement);
 
         if($(self).attr('data-photo-src')) {
-            texture = THREE.ImageUtils.loadTexture($(self).attr('data-photo-src'));
-            photo = true;
-            animate();
+            this.texture = THREE.ImageUtils.loadTexture($(self).attr('data-photo-src'));
+            this.photo = true;
+            this.animate();
         } else {
             // create off-dom video player
-            video = document.createElement( 'video' );
-            video.loop = this.options.loop;
-            video.muted = this.options.muted;
-            texture = new THREE.Texture( video );
+            this.video = $(self).append(document.createElement( 'video' ));
+            this.video.loop = this.options.loop;
+            this.video.muted = this.options.muted;
+            this.texture = new THREE.Texture( this.video );
         }
 
-        texture.generateMipmaps = false;
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-        texture.format = THREE.RGBFormat;
+        this.texture.generateMipmaps = false;
+        this.texture.minFilter = THREE.LinearFilter;
+        this.texture.magFilter = THREE.LinearFilter;
+        this.texture.format = THREE.RGBFormat;
 
         // create ThreeJS mesh sphere onto which our texture will be drawn
-        mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
-        mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
-        scene.add(mesh);
+        this.mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: texture } ) );
+        this.mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
+        this.scene.add(this.mesh);
 
         // if we have a video, attach our controls etc
-        if(video) {
+        if(this.video) {
 
             // attach video player event listeners
-            video.addEventListener("ended", function(e) {
+            this.video.addEventListener("ended", function() {
                 log("video loaded");
             });
 
             // Progress Meter
-            video.addEventListener("progress", function(e) {
+            this.video.addEventListener("progress", function() {
                 var percent = null;
-                    if (video && video.buffered && video.buffered.length > 0 && video.buffered.end && video.duration) {
-                        percent = video.buffered.end(0) / video.duration;
+                    if (self.video && self.video.buffered && self.video.buffered.length > 0 && self.video.buffered.end && self.video.duration) {
+                        percent = self.video.buffered.end(0) / self.video.duration;
                     }
                     // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
                     // to be anything other than 0. If the byte count is available we use this instead.
                     // Browsers that support the else if do not seem to have the bufferedBytes value and
                     // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-                    else if (video && video.bytesTotal != undefined && video.bytesTotal > 0 && video.bufferedBytes != undefined) {
-                        percent = video.bufferedBytes / video.bytesTotal;
+                    else if (self.video && self.video.bytesTotal !== undefined && self.video.bytesTotal > 0 && self.video.bufferedBytes !== undefined) {
+                        percent = self.video.bufferedBytes / self.video.bytesTotal;
                     }
 
+                    // Someday we can have a loading animation for videos
                     var cpct = Math.round(percent * 100);
-                    if(cpct == 100) {
+                    if(cpct === 100) {
                         // do something now that we are done
                     } else {
                         // do something with this percentage info (cpct)
@@ -174,39 +180,39 @@ three.js r65 or higher
             });
 
             // Video Play Listener, fires after video loads
-            video.addEventListener("canplaythrough", function(e) {
+            this.video.addEventListener("canplaythrough", function() {
 
-                if(self.options.autoplay == true) {
-                    video.play();
+                if(self.options.autoplay === true) {
+                    self.video.play();
                 }
 
-                animate();
+                self.animate();
                 log("playing");
             });
 
             // set the video src and begin loading
-            video.src = this.attr('data-video-src');
-        } else if(photo != false) {
-            photo.onload = animate;
-            photo.crossOrigin='anonymous';
-            photo.src = $(self).attr('data-photo-src');
+            self.video.src = this.attr('data-video-src');
+        } else if(photo !== false) {
+            self.photo.onload = self.animate;
+            self.photo.crossOrigin = 'anonymous';
+            self.photo.src = $(self).attr('data-photo-src');
         }
 
     }
 
     // create separate webgl layer and scene for drawing onscreen controls
-    function createControls(options) {
+    function createControls() {
 
-    	var muteControl = self.options.muted ? 'fa-volume-off' : 'fa-volume-up';
-    	var playPauseControl = self.options.autoplay ? 'fa-pause' : 'fa-play';
+        var muteControl = self.options.muted ? 'fa-volume-off' : 'fa-volume-up';
+        var playPauseControl = self.options.autoplay ? 'fa-pause' : 'fa-play';
 
-	    controlsHTML = ' \
-	        <div class="controls"> \
-	            <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
-	            <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
-	            <a href="#" class="fullscreenButton button fa fa-expand"></a> \
-	        </div> \
-	    ';
+        controlsHTML = ' \
+            <div class="controls"> \
+                <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
+                <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
+                <a href="#" class="fullscreenButton button fa fa-expand"></a> \
+            </div> \
+        ';
 
         this.append(controlsHTML, true);
 
@@ -221,27 +227,27 @@ three.js r65 or higher
 
     function attachControlEvents() {
 
-        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-        document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
-        document.addEventListener( 'mousedown', onDocumentMouseDown, false);
-        document.addEventListener( 'mouseup', onDocumentMouseUp, false);
-        document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false);
+        document.addEventListener( 'mousemove', self.onDocumentMouseMove, false );
+        document.addEventListener( 'mousewheel', self.onDocumentMouseWheel, false );
+        document.addEventListener( 'mousedown', self.onDocumentMouseDown, false);
+        document.addEventListener( 'mouseup', self.onDocumentMouseUp, false);
+        document.addEventListener( 'DOMMouseScroll', self.onDocumentMouseWheel, false);
 
         // CONTROLS
         $(self).find('.playButton').click(function(e) {
             e.preventDefault();
             if($(this).hasClass('fa-pause')) {
                 $(this).removeClass('fa-pause').addClass('fa-play');
-                pause();
+                self.pause();
             } else {
                 $(this).removeClass('fa-play').addClass('fa-pause');
-                play();
+                self.play();
             }
         });
 
         $(self).find('.pauseButton').click(function(e) {
             e.preventDefault();
-            pause();
+            self.pause();
         });
 
         $(self).find(".fullscreenButton").click(function(e) {
@@ -282,69 +288,58 @@ three.js r65 or higher
             }
         });
 
-        function onDocumentMouseUp( event ) {
+        self.onDocumentMouseUp = function( ) {
             mouseDown = false;
-        }
+        };
 
-        function onDocumentMouseDown( event ) {
+        self.onDocumentMouseDown = function( event ) {
             mouseDown = true;
             dragStart.x = event.pageX;
             dragStart.y = event.pageY;
-        }
+        };
 
         // attach mouse listeners
-        function onDocumentMouseMove( event ) {
-            onPointerDownPointerX = event.clientX;
-            onPointerDownPointerY = -event.clientY;
+        self.onDocumentMouseMove = function( event ) {
+            self.onPointerDownPointerX = event.clientX;
+            self.onPointerDownPointerY = -event.clientY;
 
-            onPointerDownLon = lon;
-            onPointerDownLat = lat;
+            self.onPointerDownLon = self.lon;
+            self.onPointerDownLat = self.lat;
+
+            var x, y;
 
             if(self.options.clickAndDrag) {
-                if(mouseDown) {
-                    var x = event.pageX - dragStart.x;
-                    var y = event.pageY - dragStart.y;
-                    dragStart.x = event.pageX;
-                    dragStart.y = event.pageY;
-                    lon += x;
-                    lat -= y;
+                if(self.mouseDown) {
+                    x = event.pageX - self.dragStart.x;
+                    y = event.pageY - self.dragStart.y;
+                    self.dragStart.x = event.pageX;
+                    self.dragStart.y = event.pageY;
+                    self.lon += x;
+                    self.lat -= y;
                 }
             } else {
                 if($(self).is(":hover")) {
-                    var x = event.pageX - $(self).find('canvas').offset().left;
-                    var y = event.pageY - $(self).find('canvas').offset().top;
-                    lon = ( x / $(self).find('canvas').width() ) * 430 - 225
-                    lat = ( y / $(self).find('canvas').height() ) * -180 + 90
+                    x = event.pageX - $(self).find('canvas').offset().left;
+                    y = event.pageY - $(self).find('canvas').offset().top;
+                    lon = ( x / $(self).find('canvas').width() ) * 430 - 225;
+                    lat = ( y / $(self).find('canvas').height() ) * -180 + 90;
                 }
             }
+        };
 
+        self.onDocumentMouseWheel = function( event ) {
 
-        }
-
-
-
-        function onDocumentMouseWheel( event ) {
-
-            var wheelSpeed = -.01;
+            var wheelSpeed = -0.01;
 
             // WebKit
-
             if ( event.wheelDeltaY ) {
-
                 fov -= event.wheelDeltaY * wheelSpeed;
-
             // Opera / Explorer 9
-
             } else if ( event.wheelDelta ) {
-
                 fov -= event.wheelDelta * wheelSpeed;
-
             // Firefox
-
             } else if ( event.detail ) {
-
                 fov += event.detail * 1.0;
-
             }
 
             var fovMin = 3;
@@ -360,104 +355,104 @@ three.js r65 or higher
                 camera.setLens(fov);
                 event.preventDefault();
             }
+        };
 
-        }
     }
 
     $(window).resize(function() {
-        resizeGL($(self).width(), $(self).height());
+        self.resizeGL($(self).width(), $(self).height());
     });
 
-    function fullscreen() {
+    self.fullscreen = function() {
         if(!window.screenTop && !window.screenY && $(self).find('a.fa-expand').length > 0) {
-            resizeGL(screen.width, screen.height);
+            self.resizeGL(screen.width, screen.height);
 
             $(self).addClass('fullscreen');
             $(self).find('a.fa-expand').removeClass('fa-expand').addClass('fa-compress');
 
             isFullscreen = true;
         } else {
-            resizeGL(self.originalWidth, self.originalHeight);
+            self.resizeGL(self.originalWidth, self.originalHeight);
 
             $(self).removeClass('fullscreen');
             $(self).find('a.fa-compress').removeClass('fa-compress').addClass('fa-expand');
 
-            isFullscreen = false;
+            self.isFullscreen = false;
         }
-    }
+    };
 
-    function resizeGL(w, h) {
+    self.resizeGL = function(w, h) {
         renderer.setSize(w, h);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
-    }
+    };
 
-    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',fullscreen);
-
+    $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',self.fullscreen);
 
     //Exposed functions
-    function play() {
+    self.play = function() {
       //code to play media
-      video.play()
-    }
+      self.video.play();
+    };
 
-    function pause() {
+    self.pause = function() {
       //code to stop media
-      video.pause();
-    }
+      self.video.pause();
+    };
 
-    function loadVideo(videoFile) {
-        video.src = videoFile;
-    }
+    self.loadVideo = function(videoFile) {
+      self.video.src = videoFile;
+    };
 
-    function loadPhoto(photoFile) {
-        photo.src = photoFile;
-    }
+    self.loadPhoto = function(photoFile) {
+        self.photo.src = photoFile;
+    };
 
-    function animate() {
+
+    self.render = function() {
+
+        self.lat = Math.max( - 85, Math.min( 85, self.lat ) );
+        self.phi = ( 90 - self.lat ) * Math.PI / 180;
+        self.theta = self.lon * Math.PI / 180;
+
+        var cx = 500 * Math.sin( self.phi ) * Math.cos( self.theta );
+        var cy = 500 * Math.cos( self.phi );
+        var cz = 500 * Math.sin( self.phi ) * Math.sin( self.theta );
+
+        self.camera.lookAt(new THREE.Vector3(cx, cy, cz));
+
+        // distortion
+        if(self.options.flatProjection) {
+            self.camera.position.x = 0;
+            self.camera.position.y = 0;
+            self.camera.position.z = 0;
+        } else {
+            self.camera.position.x = - cx;
+            self.camera.position.y = - cy;
+            self.camera.position.z = - cz;
+        }
+
+        self.renderer.clear();
+        self.renderer.render( scene, camera );
+    };
+
+    self.animate = function() {
         // set our animate function to fire next time a frame is ready
-        requestAnimationFrame( animate );
+        requestAnimationFrame( self.animate );
 
-        if ( video.readyState === video.HAVE_ENOUGH_DATA && !photo) {
-            if(typeof(texture) != "undefined" ) {
+        if ( self.video.readyState === self.video.HAVE_ENOUGH_DATA && !self.photo) {
+            if(typeof(texture) !== "undefined" ) {
                 var ct = new Date().getTime();
-                if(ct - time >= 30) {
-                    texture.needsUpdate = true;
-                    time = ct;
+                if(ct - self.time >= 30) {
+                    self.texture.needsUpdate = true;
+                    self.time = ct;
                 }
             }
         }
 
-        render();
+        self.render();
 
-    }
-
-    function render() {
-
-        lat = Math.max( - 85, Math.min( 85, lat ) );
-        phi = ( 90 - lat ) * Math.PI / 180;
-        theta = lon * Math.PI / 180;
-
-        var cx = 500 * Math.sin( phi ) * Math.cos( theta );
-        var cy = 500 * Math.cos( phi );
-        var cz = 500 * Math.sin( phi ) * Math.sin( theta );
-
-        camera.lookAt(new THREE.Vector3(cx, cy, cz));
-
-        // distortion
-        if(self.options.flatProjection) {
-            camera.position.x = 0;
-            camera.position.y = 0;
-            camera.position.z = 0;
-        } else {
-            camera.position.x = - cx;
-            camera.position.y = - cy;
-            camera.position.z = - cz;
-        }
-
-        renderer.clear();
-        renderer.render( scene, camera );
-    }
+    };
 
 
     // TODO: wire up a custom log function to turn off if we have debug mode set to false

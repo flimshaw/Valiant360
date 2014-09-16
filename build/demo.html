@@ -26,18 +26,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 		<div class="valiantPhoto" data-photo-src="equirectangular-bathroom-tile.jpg" style="width: 720px; height: 480px;"></div>
 
+		<div class="valiantPhoto2" data-photo-src="equirectangular-bathroom-tile.jpg" style="width: 320px; height: 480px;"></div>
 
 
 		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="js/three.min.js"></script>
 
 		<!-- Valiant360 plugin, load after jQuery and Three.js -->
-		<script type="text/javascript" src="jquery.valiant360.js"></script>
+		<script type="text/javascript" src="../src/lib/Detector.js"></script>
+		<script type="text/javascript" src="../src/valiantRefactor.js"></script>
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-
-				$('.valiant').Valiant360();
+				$('.valiantPhoto').Valiant360({ clickAndDrag: true });
+				$('.valiantPhoto2').Valiant360();
 			});
 		</script>
 
