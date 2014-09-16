@@ -80,6 +80,10 @@
             this._lon = this.options.lon;
             this._fov = this.options.fov;
 
+            // save our original height and width for returning from fullscreen
+            this._originalWidth = $(this.element).find('canvas').width();
+            this._originalHeight = $(this.element).find('canvas').height();
+
             // add a class to our element so it inherits the appropriate styles
             $(this.element).addClass('Valiant360_default');
 
@@ -93,7 +97,7 @@
             var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = (d + Math.random()*16)%16 | 0;
                 d = Math.floor(d/16);
-                return (c=='x' ? r : (r&0x7|0x8)).toString(16);
+                return (c==='x' ? r : (r&0x7|0x8)).toString(16);
             });
             return uuid;
         },
@@ -213,26 +217,136 @@
         },
 
         attachControlEvents: function() {
-            document.addEventListener( 'mousemove', this.onMouseMove, false );
-            document.addEventListener( 'mousewheel DOMMouseScroll', this.onMouseWheel, false );
-            document.addEventListener( 'mousedown', this.onMouseDown, false);
-            document.addEventListener( 'mouseup', this.onMouseUp, false);
+
+            // create a self var to pass to our controller functions
+            var self = this;
+
+            this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
+            this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
+            this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
+            this.element.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
+            this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
+
+            $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',this.fullscreen.bind(this));
+
+            $(window).resize(function() {
+                self.resizeGL($(self.element).width(), $(self.element).height());
+            });
+
+            // Player Controls
+            $(this.element).find('.playButton').click(function(e) {
+                e.preventDefault();
+                if($(this).hasClass('fa-pause')) {
+                    $(this).removeClass('fa-pause').addClass('fa-play');
+                    self.pause();
+                } else {
+                    $(this).removeClass('fa-play').addClass('fa-pause');
+                    self.play();
+                }
+            });
+
+            $(this.element).find(".fullscreenButton").click(function(e) {
+                e.preventDefault();
+                var elem = $(self.element)[0];
+                if($(this).hasClass('fa-expand')) {
+                    if (elem.requestFullscreen) {
+                      elem.requestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                      elem.msRequestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                      elem.mozRequestFullScreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                      elem.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (elem.requestFullscreen) {
+                      document.exitFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                      document.msExitFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                      document.mozCancelFullScreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                      document.webkitExitFullscreen();
+                    }
+                }
+            });
+
+            $(this.element).find(".muteButton").click(function(e) {
+                e.preventDefault();
+                if($(this).hasClass('fa-volume-off')) {
+                    $(this).removeClass('fa-volume-off').addClass('fa-volume-up');
+                    self._video.muted = false;
+                } else {
+                    $(this).removeClass('fa-volume-up').addClass('fa-volume-off');
+                    self._video.muted = true;
+                }
+            });
+
         },
 
-        onMouseMove: function(e) {
+        onMouseMove: function() {
+            this._onPointerDownPointerX = event.clientX;
+            this._onPointerDownPointerY = -event.clientY;
 
+            this._onPointerDownLon = this._lon;
+            this._onPointerDownLat = this._lat;
+
+            var x, y;
+
+            if(this.options.clickAndDrag) {
+                if(this._mouseDown) {
+                    x = event.pageX - this._dragStart.x;
+                    y = event.pageY - this._dragStart.y;
+                    this._dragStart.x = event.pageX;
+                    this._dragStart.y = event.pageY;
+                    this._lon += x;
+                    this._lat -= y;
+                }
+            } else {
+                x = event.pageX - $(this.element).find('canvas').offset().left;
+                y = event.pageY - $(this.element).find('canvas').offset().top;
+                this._lon = ( x / $(this.element).find('canvas').width() ) * 430 - 225;
+                this._lat = ( y / $(this.element).find('canvas').height() ) * -180 + 90;
+            }
         }, 
 
-        onMouseWheel: function(e) {
+        onMouseWheel: function(event) {
 
+            var wheelSpeed = -0.01;
+
+            // WebKit
+            if ( event.wheelDeltaY ) {
+                this._fov -= event.wheelDeltaY * wheelSpeed;
+            // Opera / Explorer 9
+            } else if ( event.wheelDelta ) {
+                this._fov -= event.wheelDelta * wheelSpeed;
+            // Firefox
+            } else if ( event.detail ) {
+                this._fov += event.detail * 1.0;
+            }
+
+            var fovMin = 3;
+            var fovMax = 100;
+
+            if(this._fov < fovMin) {
+                this._fov = fovMin;
+            } else if(this._fov > fovMax) {
+                this._fov = fovMax;
+            }
+
+            this._camera.setLens(this._fov);
+            event.preventDefault();
+            console.log('wheel');
         },
 
-        onMouseDown: function(e) {
-
+        onMouseDown: function(event) {
+            this._mouseDown = true;
+            this._dragStart.x = event.pageX;
+            this._dragStart.y = event.pageY;
         },
 
-        onMouseUp: function(e) {
-
+        onMouseUp: function() {
+            this._mouseDown = false;
         },
 
         animate: function() {
@@ -278,6 +392,49 @@
 
             this._renderer.clear();
             this._renderer.render( this._scene, this._camera );
+        },
+
+        // Video specific functions, exposed to controller
+        play: function() {
+            //code to play media
+            this._video.play();
+        },
+
+        pause: function() {
+            //code to stop media
+            this._video.pause();
+        },
+
+        loadVideo: function(videoFile) {
+            this._video.src = videoFile;
+        },
+
+        loadPhoto: function(photoFile) {
+            this._texture = THREE.ImageUtils.loadTexture( photoFile );
+        },
+
+        fullscreen: function() {
+            if(!window.screenTop && !window.screenY && $(this.element).find('a.fa-expand').length > 0) {
+                this.resizeGL(screen.width, screen.height);
+
+                $(this.element).addClass('fullscreen');
+                $(this.element).find('a.fa-expand').removeClass('fa-expand').addClass('fa-compress');
+
+                this._isFullscreen = true;
+            } else {
+                this.resizeGL(this._originalWidth, this._originalHeight);
+
+                $(this.element).removeClass('fullscreen');
+                $(this.element).find('a.fa-compress').removeClass('fa-compress').addClass('fa-expand');
+
+                this._isFullscreen = false;
+            }
+        },
+
+        resizeGL: function(w, h) {
+            this._renderer.setSize(w, h);
+            this._camera.aspect = w / h;
+            this._camera.updateProjectionMatrix();
         },
 
     };
