@@ -16,6 +16,7 @@ three.js r65 or higher
 
 */
 
+var ValiantMeshes = [];
 
 /*!
  * jQuery lightweight plugin boilerplate
@@ -206,6 +207,7 @@ three.js r65 or higher
             this._mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: this._texture } ) );
             this._mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
             this._scene.add(this._mesh);
+            ValiantMeshes.push(this._mesh);
 
             this.animate();
         },
