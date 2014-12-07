@@ -7,7 +7,7 @@
 #### Latest Features
 
 + Smoother mouse panning
-+ Panning based on device's sensor (The canvas pans as you rotate your phone ala Streetview. Only 360 images work on mobile for now.)
++ Panning based on device's sensor (The canvas pans as you rotate your phone a la Streetview. Only 360 images work on mobile for now.)
 + Ability to disable zooming via mouse wheel
 
 #### About
