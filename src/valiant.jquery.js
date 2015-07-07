@@ -47,6 +47,8 @@ three.js r65 or higher
         defaults = {
             clickAndDrag: false,
             fov: 35,
+            fovMin: 3,
+            fovMax: 100,
             hideControls: false,
             lon: 0,
             lat: 0,
@@ -127,7 +129,8 @@ three.js r65 or higher
             this._scene = new THREE.Scene();
 
             // create ThreeJS camera
-            this._camera = new THREE.PerspectiveCamera( this.options.fov, $(this.element).width() / $(this.element).height(), 0.1, 1000);
+            this._camera = new THREE.PerspectiveCamera(this._fov, $(this.element).width() / $(this.element).height(), 0.1, 1000);
+            this._camera.setLens(this._fov);
 
             // create ThreeJS renderer and append it to our object
             this._renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
@@ -347,13 +350,10 @@ three.js r65 or higher
                 this._fov += event.detail * 1.0;
             }
 
-            var fovMin = 3;
-            var fovMax = 100;
-
-            if(this._fov < fovMin) {
-                this._fov = fovMin;
-            } else if(this._fov > fovMax) {
-                this._fov = fovMax;
+            if(this._fov < this.options.fovMin) {
+                this._fov = this.options.fovMin;
+            } else if(this._fov > this.options.fovMax) {
+                this._fov = this.options.fovMax;
             }
 
             this._camera.setLens(this._fov);
