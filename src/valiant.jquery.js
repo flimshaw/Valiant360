@@ -241,10 +241,13 @@ three.js r65 or higher
             var self = this;
 
             this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
+            this.element.addEventListener( 'touchmove', this.onMouseMove.bind(this), false );
             this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
             this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
             this.element.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
+            this.element.addEventListener( 'touchstart', this.onMouseDown.bind(this), false);
             this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
+            this.element.addEventListener( 'touchend', this.onMouseUp.bind(this), false);
 
             $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',this.fullscreen.bind(this));
 
