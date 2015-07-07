@@ -45,6 +45,7 @@ three.js r65 or higher
     // Create the defaults once
     var pluginName = "Valiant360",
         defaults = {
+            crossOrigin: 'anonymous',
             clickAndDrag: false,
             fov: 35,
             fovMin: 3,
@@ -144,11 +145,13 @@ three.js r65 or higher
             // figure out our texturing situation, based on what our source is
             if( $(this.element).attr('data-photo-src') ) {
                 this._isPhoto = true;
+                THREE.ImageUtils.crossOrigin = this.options.crossOrigin;
                 this._texture = THREE.ImageUtils.loadTexture( $(this.element).attr('data-photo-src') );
             } else {
                 this._isVideo = true;
                 // create off-dom video player
                 this._video = document.createElement( 'video' );
+                this._video.setAttribute('crossorigin', this.options.crossOrigin);
                 this._video.style.display = 'none';
                 $(this.element).append( this._video );
                 this._video.loop = this.options.loop;

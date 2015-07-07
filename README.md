@@ -35,6 +35,7 @@ More detailed api documentation pending, for now the below explains about all yo
 ```
 	// initialize plugin, default options shown
 	$('.valiantContainer').Valiant360({
+		crossOrigin: 'anonymous',	// valid keywords: 'anonymous' or 'use-credentials'
 		clickAndDrag: false,	// use click-and-drag camera controls
 		flatProjection: false,	// map image to appear flat (often more distorted)
 		fov: 35, 				// initial field of view
@@ -62,6 +63,16 @@ More detailed api documentation pending, for now the below explains about all yo
 
 ```
 
+#### A note on the crossOrigin CORS option
+Allows images and videos to be served from a domain separate to where Valiant360 is hosted (eg a CDN). **If a crossOrigin keyword is not specified, anonymous is used**.
+
+This option will allow Valiant360 to grab cross-domain assets for Chrome and Firefox, however at time of writing Safari throws the error: `[Error] SecurityError: DOM Exception 18: An attempt was made to break through the security policy of the user agent.`
+
+Cross-domain tested on Mac OSX Yosemite: Chrome v43.0.2357.130, Chrome Canary v45.0.2449.0, Firefox v39.0, Safari v8.0.6.
+
+For further explanation on these CORS keywords, see:
+* [MDN CORS settings attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes)
+* [WHATWG CORS settings attributes](https://html.spec.whatwg.org/multipage/infrastructure.html#cors-settings-attribute)
 
 #### 3rd party libraries and their licenses
 
