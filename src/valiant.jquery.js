@@ -47,6 +47,8 @@ three.js r65 or higher
         defaults = {
             clickAndDrag: false,
             fov: 35,
+            fovMin: 3,
+            fovMax: 100,
             hideControls: false,
             lon: 0,
             lat: 0,
@@ -345,13 +347,10 @@ three.js r65 or higher
                 this._fov += event.detail * 1.0;
             }
 
-            var fovMin = 3;
-            var fovMax = 100;
-
-            if(this._fov < fovMin) {
-                this._fov = fovMin;
-            } else if(this._fov > fovMax) {
-                this._fov = fovMax;
+            if(this._fov < this.options.fovMin) {
+                this._fov = this.options.fovMin;
+            } else if(this._fov > this.options.fovMax) {
+                this._fov = this.options.fovMax;
             }
 
             this._camera.setLens(this._fov);
