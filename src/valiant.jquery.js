@@ -457,13 +457,18 @@ three.js r65 or higher
 
     };
 
-    // A really lightweight plugin wrapper around the constructor,
-    // preventing against multiple instantiations
     $.fn[pluginName] = function ( options ) {
         return this.each(function () {
-            if (!$.data(this, "plugin_" + pluginName)) {
-                $.data(this, "plugin_" + pluginName,
-                new Plugin( this, options ));
+            if(typeof options === 'object' || !options) {
+                // A really lightweight plugin wrapper around the constructor,
+                // preventing against multiple instantiations
+                this.plugin = new Plugin(this, options);
+                if (!$.data(this, "plugin_" + pluginName)) {
+                    $.data(this, "plugin_" + pluginName, this.plugin);
+                }
+            } else if(this.plugin[options]) {
+                // Allows plugin methods to be called
+                return this.plugin[options].apply(this.plugin, Array.prototype.slice.call(arguments, 1))
             }
         });
     };
