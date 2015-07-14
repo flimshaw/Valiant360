@@ -44,6 +44,7 @@ three.js r65 or higher
 
     // Create the defaults once
     var pluginName = "Valiant360",
+        plugin, // will hold reference to instantiated Plugin
         defaults = {
             clickAndDrag: false,
             fov: 35,
@@ -89,6 +90,7 @@ three.js r65 or higher
             this._controls = {};
             this._id = this.generateUUID();
 
+            this._requestAnimationId = ''; // used to cancel requestAnimationFrame on destroy
             this._isVideo = false;
             this._isPhoto = false;
             this._isFullscreen = false;
@@ -369,8 +371,8 @@ three.js r65 or higher
 
         animate: function() {
             // set our animate function to fire next time a frame is ready
-            requestAnimationFrame( this.animate.bind(this) );
-            
+            this._requestAnimationId = requestAnimationFrame( this.animate.bind(this) );
+
             if( this._isVideo ) {
                 if ( this._video.readyState === this._video.HAVE_ENOUGH_DATA) {
                     if(typeof(this._texture) !== "undefined" ) {
@@ -426,7 +428,12 @@ three.js r65 or higher
         loadVideo: function(videoFile) {
             this._video.src = videoFile;
         },
-
+        unloadVideo: function() {
+            // overkill unloading to avoid dreaded video 'pending' bug in Chrome. See https://code.google.com/p/chromium/issues/detail?id=234779
+            this.pause();
+            this._video.src = '';
+            this._video.removeAttribute('src');
+        },
         loadPhoto: function(photoFile) {
             this._texture = THREE.ImageUtils.loadTexture( photoFile );
         },
@@ -455,6 +462,16 @@ three.js r65 or higher
             this._camera.updateProjectionMatrix();
         },
 
+        destroy: function() {
+            window.cancelAnimationFrame(this._requestAnimationId);
+            this._requestAnimationId = '';
+            this._texture.dispose();
+            this._scene.remove(this._mesh);
+            if(this._isVideo) {
+                this.unloadVideo();
+            }
+            $(this._renderer.domElement).remove();
+        }
     };
 
     // A really lightweight plugin wrapper around the constructor,
