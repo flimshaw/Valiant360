@@ -58,6 +58,9 @@ More detailed api documentation pending, for now the below explains about all yo
 	// load new photo file
 	$('.valiantContainer').Valiant360('loadPhoto', 'path/to/file.jpg');
 
+	// destroy Valiant360 processing/resources (however, will not remove element from the dom. That is left up to you)
+	$('.valiantContainer').Valiant360('destroy');	
+
 ```
 
 
