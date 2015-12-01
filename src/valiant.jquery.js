@@ -6,7 +6,7 @@
  * Released under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  *
- * Jquery plugin pattern based on https://github.com/jquery-boilerplate/jquery-patterns/blob/master/patterns/jquery.basic.plugin-boilerplate.js 
+ * Jquery plugin pattern based on https://github.com/jquery-boilerplate/jquery-patterns/blob/master/patterns/jquery.basic.plugin-boilerplate.js
  */
 
 /* REQUIREMENTS:
@@ -46,6 +46,7 @@ three.js r65 or higher
     var pluginName = "Valiant360",
         defaults = {
             clickAndDrag: false,
+            invertDrag: false,
             fov: 35,
             hideControls: false,
             lon: 0,
@@ -314,8 +315,13 @@ three.js r65 or higher
 
             if(this.options.clickAndDrag) {
                 if(this._mouseDown) {
+                  if(this.options.invertDrag){
+                    x = this._dragStart.x - event.pageX;
+                    y = this._dragStart.y - event.pageY;
+                  } else {
                     x = event.pageX - this._dragStart.x;
                     y = event.pageY - this._dragStart.y;
+                  }
                     this._dragStart.x = event.pageX;
                     this._dragStart.y = event.pageY;
                     this._lon += x;
@@ -327,7 +333,7 @@ three.js r65 or higher
                 this._lon = ( x / $(this.element).find('canvas').width() ) * 430 - 225;
                 this._lat = ( y / $(this.element).find('canvas').height() ) * -180 + 90;
             }
-        }, 
+        },
 
         onMouseWheel: function(event) {
 
@@ -370,7 +376,7 @@ three.js r65 or higher
         animate: function() {
             // set our animate function to fire next time a frame is ready
             requestAnimationFrame( this.animate.bind(this) );
-            
+
             if( this._isVideo ) {
                 if ( this._video.readyState === this._video.HAVE_ENOUGH_DATA) {
                     if(typeof(this._texture) !== "undefined" ) {
@@ -380,9 +386,9 @@ three.js r65 or higher
                             this._time = ct;
                         }
                     }
-                }                
+                }
             }
-            
+
             this.render();
         },
 

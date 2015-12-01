@@ -11,7 +11,7 @@ The aim of this project is to provide a free, minimalist 360 degree video WebGL 
 
 There is currently no mobile support, but as Chrome and Safari mobile editions enable WebGL, this should be forwards-compatible with them.
 
-#### Usage 
+#### Usage
 
 See the [demo folder](https://github.com/flimshaw/Valiant360/tree/master/demo) or the [example](http://flimshaw.github.io/Valiant360).  Moving the mouse will pan the camera, and the scroll wheel will zoom in and out.
 
@@ -36,6 +36,7 @@ More detailed api documentation pending, for now the below explains about all yo
 	// initialize plugin, default options shown
 	$('.valiantContainer').Valiant360({
 		clickAndDrag: false,	// use click-and-drag camera controls
+		invertDrag: false,    	// invert the directions of click-and-drag controls
 		flatProjection: false,	// map image to appear flat (often more distorted)
 		fov: 35, 				// initial field of view
 		hideControls: false,	// hide player controls
