@@ -432,7 +432,7 @@ three.js r65 or higher
         },
 
         fullscreen: function() {
-            if(!window.screenTop && !window.screenY && $(this.element).find('a.fa-expand').length > 0) {
+            if($(this.element).find('a.fa-expand').length > 0) {
                 this.resizeGL(screen.width, screen.height);
 
                 $(this.element).addClass('fullscreen');
