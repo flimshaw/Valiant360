@@ -16,24 +16,25 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		<meta charset="utf-8">
 
 		<!-- Valiant360 control styles -->
-		<link rel="stylesheet" type="text/css" href="css/valiant360.css" />
+		<link rel="stylesheet" type="text/css" href="../demo/css/valiant360.css" />
 
 	</head>
 	<body>
 
-		<div class="valiantPhoto" data-video-src="overpass-clip.mp4" style="width: 480px; height: 380px;"></div>
+		<div class="valiantPhoto" data-video-src="overpass-clip.mp4" style="width: 100%; height: 500px;"></div>
 
-		<div class="valiantPhoto" data-photo-src="equirectangular-bathroom-tile.jpg" style="width: 480px; height: 380px;"></div>
+		<div class="valiantPhoto" data-photo-src="demo360.jpg" style="width: 100%; height: 500px;"></div>
 
-		<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="../demo/js/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="../demo/js/three.min.js"></script>
+		<script type="text/javascript" src="../src/lib/Detector.js"></script>
 
 		<!-- Valiant360 plugin, load after jQuery and Three.js -->
-		<script type="text/javascript" src="jquery.valiant360.min.js"></script>
+		<script type="text/javascript" src="../src/valiant.jquery.js"></script>
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('.valiantPhoto').Valiant360();
+				$('.valiantPhoto').Valiant360({ disableZoom: true });
 			});
 		</script>
 

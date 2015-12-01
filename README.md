@@ -4,6 +4,11 @@
 
 [Example](http://flimshaw.github.io/Valiant360) - [Development Log](https://github.com/flimshaw/Valiant360/wiki/Development-log)
 
+#### Latest Features
+
++ Smoother mouse panning
++ Panning based on device's sensor (The canvas pans as you rotate your phone a la Streetview. Only 360 images work on mobile for now.)
++ Ability to disable zooming via mouse wheel
 
 #### About
 

@@ -54,7 +54,8 @@ three.js r65 or higher
             muted: true,
             debug: false,
             flatProjection: false,
-            autoplay: true
+            autoplay: true,
+            disableZoom: false
         };
 
     // The actual plugin constructor
@@ -98,6 +99,13 @@ three.js r65 or higher
             this._lat = this.options.lat;
             this._lon = this.options.lon;
             this._fov = this.options.fov;
+
+            this._xspeed = 0;
+            this._yspeed = 0;
+            
+            this._smoothing = 0.3; // between 0 and 1
+            this._alpha = 0;
+            this._beta = 0;
 
             // save our original height and width for returning from fullscreen
             this._originalWidth = $(this.element).find('canvas').width();
@@ -240,11 +248,26 @@ three.js r65 or higher
             // create a self var to pass to our controller functions
             var self = this;
 
-            this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
-            this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
-            this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
+            //this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false ); // Detect either device's sensor or mousemove depending on availability of window.DeviceOrientationEvent
+           
+            if (self.options.disableZoom === false) {
+                this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
+                this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
+            }
+
             this.element.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
             this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
+
+             if (window.DeviceOrientationEvent) {
+                // Listen for the event and handle DeviceOrientationEvent object
+                if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+                    window.addEventListener('deviceorientation', this.onDeviceMove.bind(this), false);
+                } else {
+                    this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
+                }
+            } else {
+                this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
+            }
 
             $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',this.fullscreen.bind(this));
 
@@ -303,6 +326,19 @@ three.js r65 or higher
 
         },
 
+        onDeviceMove: function(event) {
+            if (Math.abs(this._alpha - event.alpha) > 180) {
+                this._alpha = event.alpha;
+            } else {
+                this._alpha = event.alpha + this._smoothing*(this._alpha - event.alpha);
+            }
+            this._beta = event.beta + this._smoothing*(this._beta - event.beta);
+            
+            this._lon = 360 - this._alpha;
+            this._lat = this._beta - 90;
+            
+        },
+
         onMouseMove: function() {
             this._onPointerDownPointerX = event.clientX;
             this._onPointerDownPointerY = -event.clientY;
@@ -324,8 +360,14 @@ three.js r65 or higher
             } else {
                 x = event.pageX - $(this.element).find('canvas').offset().left;
                 y = event.pageY - $(this.element).find('canvas').offset().top;
-                this._lon = ( x / $(this.element).find('canvas').width() ) * 430 - 225;
-                this._lat = ( y / $(this.element).find('canvas').height() ) * -180 + 90;
+                
+                this._xspeed = -($(window).width()/2 - x) * 0.001;
+                this._yspeed = ($(window).height()/2 - y) * 0.001;
+                
+                (this._xspeed > 0.28) ? this._xspeed = 0.28 : this._xspeed;
+                (this._yspeed > 0.40) ? this._yspeed = 0.40 : this._yspeed;
+                
+                
             }
         }, 
 
@@ -381,6 +423,17 @@ three.js r65 or higher
                         }
                     }
                 }                
+            }
+
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                this._lon = this._lon + this._xspeed;
+                this._lat = this._lat + this._yspeed;
+                
+                if (this._lat > 15) {
+                    //this._lat = 15;
+                } else if (this._lat < -25) {
+                    //this._lat = -25;
+                }
             }
             
             this.render();
