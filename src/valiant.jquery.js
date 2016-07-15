@@ -171,24 +171,24 @@ three.js r65 or higher
                 // Progress Meter
                 this._video.addEventListener("progress", function() {
                     var percent = null;
-                        if (self._video && self._video.buffered && self._video.buffered.length > 0 && self._video.buffered.end && self._video.duration) {
-                            percent = self._video.buffered.end(0) / self._video.duration;
-                        }
-                        // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
-                        // to be anything other than 0. If the byte count is available we use this instead.
-                        // Browsers that support the else if do not seem to have the bufferedBytes value and
-                        // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-                        else if (self._video && self._video.bytesTotal !== undefined && self._video.bytesTotal > 0 && self._video.bufferedBytes !== undefined) {
-                            percent = self._video.bufferedBytes / self._video.bytesTotal;
-                        }
+                    if (self._video && self._video.buffered && self._video.buffered.length > 0 && self._video.buffered.end && self._video.duration) {
+                        percent = self._video.buffered.end(0) / self._video.duration;
+                    }
+                    // Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
+                    // to be anything other than 0. If the byte count is available we use this instead.
+                    // Browsers that support the else if do not seem to have the bufferedBytes value and
+                    // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
+                    else if (self._video && self._video.bytesTotal !== undefined && self._video.bytesTotal > 0 && self._video.bufferedBytes !== undefined) {
+                        percent = self._video.bufferedBytes / self._video.bytesTotal;
+                    }
 
-                        // Someday we can have a loading animation for videos
-                        var cpct = Math.round(percent * 100);
-                        if(cpct === 100) {
-                            // do something now that we are done
-                        } else {
-                            // do something with this percentage info (cpct)
-                        }
+                    // Someday we can have a loading animation for videos
+                    var cpct = Math.round(percent * 100);
+                    if(cpct === 100) {
+                        // do something now that we are done
+                    } else {
+                        // do something with this percentage info (cpct)
+                    }
                 });
 
                 // Video Play Listener, fires after video loads
@@ -280,23 +280,23 @@ three.js r65 or higher
                 var elem = $(self.element)[0];
                 if($(this).hasClass('fa-expand')) {
                     if (elem.requestFullscreen) {
-                      elem.requestFullscreen();
+                        elem.requestFullscreen();
                     } else if (elem.msRequestFullscreen) {
-                      elem.msRequestFullscreen();
+                        elem.msRequestFullscreen();
                     } else if (elem.mozRequestFullScreen) {
-                      elem.mozRequestFullScreen();
+                        elem.mozRequestFullScreen();
                     } else if (elem.webkitRequestFullscreen) {
-                      elem.webkitRequestFullscreen();
+                        elem.webkitRequestFullscreen();
                     }
                 } else {
                     if (elem.requestFullscreen) {
-                      document.exitFullscreen();
+                        document.exitFullscreen();
                     } else if (elem.msRequestFullscreen) {
-                      document.msExitFullscreen();
+                        document.msExitFullscreen();
                     } else if (elem.mozRequestFullScreen) {
-                      document.mozCancelFullScreen();
+                        document.mozCancelFullScreen();
                     } else if (elem.webkitRequestFullscreen) {
-                      document.webkitExitFullscreen();
+                        document.webkitExitFullscreen();
                     }
                 }
             });
@@ -338,7 +338,7 @@ three.js r65 or higher
                 this._lon = ( x / $(this.element).find('canvas').width() ) * 430 - 225;
                 this._lat = ( y / $(this.element).find('canvas').height() ) * -180 + 90;
             }
-        }, 
+        },
 
         onMouseWheel: function(event) {
 
@@ -388,9 +388,9 @@ three.js r65 or higher
                             this._time = ct;
                         }
                     }
-                }                
+                }
             }
-            
+
             this.render();
         },
 
