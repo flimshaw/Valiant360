@@ -6,7 +6,7 @@
  * Released under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  *
- * Jquery plugin pattern based on https://github.com/jquery-boilerplate/jquery-patterns/blob/master/patterns/jquery.basic.plugin-boilerplate.js 
+ * Jquery plugin pattern based on https://github.com/jquery-boilerplate/jquery-patterns/blob/master/patterns/jquery.basic.plugin-boilerplate.js
  */
 
 /* REQUIREMENTS:
@@ -200,6 +200,14 @@ three.js r65 or higher
                     }
                 });
 
+                this._video.addEventListener("timeupdate", function() {
+                    if (this.paused === false){
+                        var percent = this.currentTime * 100 / this.duration;
+                        $(self.element).find('.controls > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
+                        $(self.element).find('.controls > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
+                    }
+                });
+
                 // set the video src and begin loading
                 this._video.src = $(this.element).attr('data-video-src');
 
@@ -226,6 +234,9 @@ three.js r65 or higher
 
             var controlsHTML = ' \
                 <div class="controls"> \
+                    <div class="valiant-progress-bar">\
+                        <div style="width: 0;"></div><div style="width: 100%;"></div>\
+                    </div>\
                     <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
                     <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
                     <a href="#" class="fullscreenButton button fa fa-expand"></a> \
@@ -256,6 +267,8 @@ three.js r65 or higher
             this.element.addEventListener( 'touchstart', this.onMouseDown.bind(this), false);
             this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
             this.element.addEventListener( 'touchend', this.onMouseUp.bind(this), false);
+
+            $(self.element).find('.controls > .valiant-progress-bar')[0].addEventListener("click", this.onProgressClick.bind(this), false);
 
             $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',this.fullscreen.bind(this));
 
@@ -318,6 +331,8 @@ three.js r65 or higher
             this._onPointerDownPointerX = event.clientX;
             this._onPointerDownPointerY = -event.clientY;
 
+            this.relativeX = event.pageX - $(this.element).find('canvas').offset().left;
+
             this._onPointerDownLon = this._lon;
             this._onPointerDownLat = this._lat;
 
@@ -369,6 +384,15 @@ three.js r65 or higher
             this._mouseDown = true;
             this._dragStart.x = event.pageX;
             this._dragStart.y = event.pageY;
+        },
+
+        onProgressClick: function(event) {
+            if(this._isVideo && this._video.readyState === this._video.HAVE_ENOUGH_DATA) {
+                var percent =  this.relativeX / $(this.element).find('canvas').width() * 100;
+                $(this.element).find('.controls > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
+                $(this.element).find('.controls > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
+                this._video.currentTime = parseInt(this._video.duration * percent / 100);
+            }
         },
 
         onMouseUp: function(event) {

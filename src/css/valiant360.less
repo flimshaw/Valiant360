@@ -1,18 +1,18 @@
 /*!
  * Valiant360 panorama video player jquery plugin
- * 
+ *
  * Copyright (c) 2014 Charlie Hoey <@flimshaw>
- * 
+ *
  * Released under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  */
 @import 'font-awesome.less';
 
 .transition (@transition) {
-	-webkit-transition: @transition;  
+	-webkit-transition: @transition;
 	-moz-transition:    @transition;
-	-ms-transition:     @transition; 
-	-o-transition:      @transition;  
+	-ms-transition:     @transition;
+	-o-transition:      @transition;
 }
 
 .box-sizing (@sizing) {
@@ -70,4 +70,21 @@
 .Valiant360_default.fullscreen {
 	width: 100%!important;
 	height: 100%!important;
+}
+
+.Valiant360_default .valiant-progress-bar {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+}
+.Valiant360_default .valiant-progress-bar:hover {
+    cursor: pointer;
+}
+.Valiant360_default .valiant-progress-bar > div {
+    height: 100%;
+    float:left;
+    background-color: #444;
+}
+.Valiant360_default .valiant-progress-bar > div:first-child {
+    background-color: red;
 }
