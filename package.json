@@ -2,7 +2,7 @@
   "name": "jquery.valiant360",
   "description": "jQuery plugin for playing 360 degree videos using WebGL",
   "homepage": "http://flimshaw.github.io/Valiant360",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Charlie Hoey <me@charliehoey.com>",
   "license": "MIT",
   "engines": {
