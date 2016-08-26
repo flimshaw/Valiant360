@@ -28,16 +28,23 @@
 		height: 100%;
 		position: absolute;
 	}
+	.controlsWrapper {
+		position: absolute;
+		height: 0;
+		width: 100%;
+		bottom:0;
+		overflow:hidden;
+		.transition(all .5s ease-in-out);
+	}
 	.controls {
 		overflow: hidden;
 		position: absolute;
 		bottom: 0;
 		background-color:rgba(0,0,0,.75);
-		height: 0px;
+		height: 40px;
 		width: 100%;
 		.box-sizing(border-box);
 		font-size: 50%;
-		.transition(all .5s ease-in-out);
 		padding: 0 10px;
 		.button {
 			width: 50px;
@@ -62,8 +69,8 @@
 }
 
 .Valiant360_default:hover {
-	.controls {
-		height: 40px;
+	.controlsWrapper {
+		height: 48px;
 	}
 }
 
