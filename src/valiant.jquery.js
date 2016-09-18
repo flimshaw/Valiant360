@@ -507,6 +507,8 @@ three.js r65 or higher
     };
 
     $.fn[pluginName] = function ( options ) {
+        // use pluginArguments instead of this.each arguments, otherwise Valiant360('loadVideo', 'path/to/video') path argument will be missing
+        var pluginArguments = arguments;
         return this.each(function () {
             if(typeof options === 'object' || !options) {
                 // A really lightweight plugin wrapper around the constructor,
@@ -516,8 +518,8 @@ three.js r65 or higher
                     $.data(this, "plugin_" + pluginName, this.plugin);
                 }
             } else if(this.plugin[options]) {
-                // Allows plugin methods to be called
-                return this.plugin[options].apply(this.plugin, Array.prototype.slice.call(arguments, 1))
+                // Allows plugin methods to be called - use pluginArguments instead of this.each arguments
+                return this.plugin[options].apply(this.plugin, Array.prototype.slice.call(pluginArguments, 1))
             }
         });
     };
