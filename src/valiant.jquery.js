@@ -256,19 +256,34 @@ three.js r65 or higher
             this.attachControlEvents();
         },
 
+        polyfillsTouchEvents: function(callback) {
+
+            return function(event) {
+
+              if(typeof event.changedTouches !== 'undefined') {
+                // touch
+                event.pageX = event.changedTouches[0].pageX;
+                event.pageY = event.changedTouches[0].pageY;
+              }
+
+              callback(event);
+            };
+
+        },
+
         attachControlEvents: function() {
 
             // create a self var to pass to our controller functions
             var self = this;
 
             this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
-            this.element.addEventListener( 'touchmove', this.onMouseMove.bind(this), false );
+            this.element.addEventListener( 'touchmove', this.polyfillsTouchEvents(this.onMouseMove.bind(this)), false );
             this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
             this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
             this.element.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
-            this.element.addEventListener( 'touchstart', this.onMouseDown.bind(this), false);
+            this.element.addEventListener( 'touchstart', this.polyfillsTouchEvents(this.onMouseDown.bind(this)), false);
             this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
-            this.element.addEventListener( 'touchend', this.onMouseUp.bind(this), false);
+            this.element.addEventListener( 'touchend', this.polyfillsTouchEvents(this.onMouseUp.bind(this)), false);
 
             $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("click", this.onProgressClick.bind(this), false);
 
