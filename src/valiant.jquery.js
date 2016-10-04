@@ -232,6 +232,7 @@ three.js r65 or higher
                         var percent = this.currentTime * 100 / this.duration;
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
+						
 						//Update time label
 						var durMin = Math.floor(this.duration / 60);
 						var durSec = Math.floor(this.duration - (durMin * 60));
