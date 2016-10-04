@@ -48,6 +48,7 @@ three.js r65 or higher
         defaults = {
             crossOrigin: 'anonymous',
             clickAndDrag: false,
+			keyboardControls: true,
             fov: 35,
             fovMin: 3,
             fovMax: 100,
@@ -56,6 +57,7 @@ three.js r65 or higher
             lat: 0,
             loop: "loop",
             muted: true,
+			volume: 0.5,
             debug: false,
             flatProjection: false,
             autoplay: true
@@ -110,6 +112,11 @@ three.js r65 or higher
 
             // add a class to our element so it inherits the appropriate styles
             $(this.element).addClass('Valiant360_default');
+			
+			// add tabindex attribute to enable the focus on the element (required for keyboard controls)  
+			if(this.options.keyboardControls && !$(this.element).attr("tabindex")){
+				$(this.element).attr("tabindex", "1");
+			}
 
             this.createMediaPlayer();
             this.createControls();
@@ -127,6 +134,9 @@ three.js r65 or higher
         },
 
         createMediaPlayer: function() {
+			
+			// make a self reference we can pass to our callbacks
+            var self = this;
 
             // create a local THREE.js scene
             this._scene = new THREE.Scene();
@@ -143,14 +153,38 @@ three.js r65 or higher
 
             // append the rendering element to this div
             $(this.element).append(this._renderer.domElement);
+			
+			var createAnimation = function () {
+                self._texture.generateMipmaps = false;
+				self._texture.minFilter = THREE.LinearFilter;
+				self._texture.magFilter = THREE.LinearFilter;
+				self._texture.format = THREE.RGBFormat;
+
+				// create ThreeJS mesh sphere onto which our texture will be drawn
+				self._mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: self._texture } ) );
+				self._mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
+				self._scene.add(self._mesh);
+
+				self.animate();
+            };
 
             // figure out our texturing situation, based on what our source is
             if( $(this.element).attr('data-photo-src') ) {
                 this._isPhoto = true;
                 THREE.ImageUtils.crossOrigin = this.options.crossOrigin;
                 this._texture = THREE.ImageUtils.loadTexture( $(this.element).attr('data-photo-src') );
+				createAnimation();
             } else {
                 this._isVideo = true;
+				
+				// create loading overlay
+				var loadingHTML =  '<div class="loading"> \
+										<div class="icon waiting-icon"></div> \
+										<div class="icon error-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div> \
+									</div>';
+                $(this.element).append(loadingHTML);				
+				this.showWaiting();
+				
                 // create off-dom video player
                 this._video = document.createElement( 'video' );
                 this._video.setAttribute('crossorigin', this.options.crossOrigin);
@@ -158,10 +192,7 @@ three.js r65 or higher
                 $(this.element).append( this._video );
                 this._video.loop = this.options.loop;
                 this._video.muted = this.options.muted;
-                this._texture = new THREE.Texture( this._video );
-
-                // make a self reference we can pass to our callbacks
-                var self = this;
+				this._video.volume = this.options.volume;
 
                 // attach video player event listeners
                 this._video.addEventListener("ended", function() {
@@ -190,40 +221,77 @@ three.js r65 or higher
                         // do something with this percentage info (cpct)
                     }
                 });
-
-                // Video Play Listener, fires after video loads
-                this._video.addEventListener("canplaythrough", function() {
-
-                    if(self.options.autoplay === true) {
-                        self._video.play();
-                        self._videoReady = true;
-                    }
+				// Error listener
+				this._video.addEventListener('error', function (event) {
+                    console.error(self._video.error);
+                    self.showError();
                 });
-
-                this._video.addEventListener("timeupdate", function() {
+				
+				this._video.addEventListener("timeupdate", function() {
                     if (this.paused === false){
                         var percent = this.currentTime * 100 / this.duration;
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
+						//Update time label
+						var durMin = Math.floor(this.duration / 60);
+						var durSec = Math.floor(this.duration - (durMin * 60));
+						var timeMin = Math.floor(this.currentTime / 60);
+						var timeSec = Math.floor(this.currentTime - (timeMin * 60));
+						var duration = (durMin < 10 ? '0' + durMin : durMin) + ':' + (durSec < 10 ? '0' + durSec : durSec);
+						var currentTime = (timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec);
+						$(self.element).find('.controls .timeLabel').html(currentTime+' / '+duration);
                     }
                 });
+				
+				// IE 11 and previous not supports THREE.Texture([video]), we must create a canvas that draws the video and use that to create the Texture
+				var isIE = navigator.appName == 'Microsoft Internet Explorer' || !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv 11/));
+				if (isIE) {
+                    this._videocanvas = document.createElement('canvas');
+					this._texture = new THREE.Texture(this._videocanvas);
+                    // set canvas size = video size when known
+                    this._video.addEventListener('loadedmetadata', function () {
+                        self._videocanvas.width = self._video.videoWidth;
+                        self._videocanvas.height = self._video.videoHeight;
+						createAnimation();
+                    });
+                }else{
+					this._texture = new THREE.Texture( this._video );
+				}
 
                 // set the video src and begin loading
-                this._video.src = $(this.element).attr('data-video-src');
+                // force caching of the video to solve rendering errors for big video file
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', $(this.element).attr('data-video-src'), true);
+                xhr.responseType = 'blob';
+                xhr.onload = function (e) {
+                    if (this.status === 200) {
+                        var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(this.response);
+                        //Video Play Listener, fires after video loads
+                        $(self._video).bind("canplaythrough", function () {
+                            if (self.options.autoplay === true) {
+                                self.hideWaiting();
+                                self.play();
+                                self._videoReady = true;
+                            }
+                        });
 
+                        self._video.src = vid;
+                    }
+                };
+                xhr.onreadystatechange = function (oEvent) {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status !== 200) {
+                            console.error('Video error: status ' + xhr.status);
+                            self.showError();
+                        }
+                    }
+                };
+                xhr.send();
+
+				if(!isIE){
+					createAnimation();
+				}
             }
-
-            this._texture.generateMipmaps = false;
-            this._texture.minFilter = THREE.LinearFilter;
-            this._texture.magFilter = THREE.LinearFilter;
-            this._texture.format = THREE.RGBFormat;
-
-            // create ThreeJS mesh sphere onto which our texture will be drawn
-            this._mesh = new THREE.Mesh( new THREE.SphereGeometry( 500, 80, 50 ), new THREE.MeshBasicMaterial( { map: this._texture } ) );
-            this._mesh.scale.x = -1; // mirror the texture, since we're looking from the inside out
-            this._scene.add(this._mesh);
-
-            this.animate();
         },
 
         // creates div and buttons for onscreen video controls
@@ -240,12 +308,14 @@ three.js r65 or higher
                 <div class="controls"> \
                     <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
                     <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
+					<span class="timeLabel">00:00</span> \
                     <a href="#" class="fullscreenButton button fa fa-expand"></a> \
                 </div> \
               </div>\
             ';
 
             $(this.element).append(controlsHTML, true);
+			$(this.element).append('<div class="timeTooltip">00:00</div>', true);
 
             // hide controls if option is set
             if(this.options.hideControls) {
@@ -269,10 +339,22 @@ three.js r65 or higher
             this.element.addEventListener( 'touchstart', this.onMouseDown.bind(this), false);
             this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
             this.element.addEventListener( 'touchend', this.onMouseUp.bind(this), false);
+			
+			if(this.options.keyboardControls){
+				this.element.addEventListener('keydown',this.onKeyDown.bind(this), false);
+                this.element.addEventListener('keyup',this.onKeyUp.bind(this), false);
+				// Used custom press event because for the arrow buttons is not throws the 'keypress' event
+                this.element.addEventListener('keyArrowPress',this.onKeyArrowPress.bind(this), false);
+				this.element.addEventListener('click',function () {
+                                $(self.element).focus();
+                            },false);
+			}
 
             $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("click", this.onProgressClick.bind(this), false);
+			$(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("mousemove", this.onProgressMouseMove.bind(this), false);
+			$(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("mouseout", this.onProgressMouseOut.bind(this), false);
 
-            $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange',this.fullscreen.bind(this));
+            $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange',this.fullscreen.bind(this));
 
             $(window).resize(function() {
                 self.resizeGL($(self.element).width(), $(self.element).height());
@@ -327,6 +409,7 @@ three.js r65 or higher
                 }
             });
 
+			
         },
 
         onMouseMove: function(event) {
@@ -396,10 +479,76 @@ three.js r65 or higher
                 this._video.currentTime = parseInt(this._video.duration * percent / 100);
             }
         },
+		
+		onProgressMouseMove: function(event){
+			var percent = (100 / $(this.element).find('canvas').width()) * event.offsetX;
+			if(percent){
+				var tooltip = $(this.element).find('.timeTooltip');
+				tooltip.css({ left: (event.clientX - $(this.element).offset().left - (tooltip.width()/2)) + 'px' });
+				tooltip.show();
+				var time = (percent / 100) * this._video.duration;
+				var timeMin = Math.floor(time / 60);
+				var timeSec = Math.floor(time - (timeMin * 60));
+				tooltip.html((timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec));
+			}
+		},
+		
+		onProgressMouseOut: function (event) {
+			$(this.element).find('.timeTooltip').hide();
+		},
 
         onMouseUp: function(event) {
             this._mouseDown = false;
         },
+		
+		onKeyDown: function(event) {
+		   var keyCode = event.keyCode;
+		   if (keyCode >= 37 && keyCode <= 40) {
+			   event.preventDefault();
+			   this._keydown = true;
+			   var pressEvent = document.createEvent('CustomEvent');
+			   pressEvent.initCustomEvent("keyArrowPress",true,true,{'keyCode':keyCode});
+			   this.element.dispatchEvent(pressEvent);
+		   }
+		},
+		
+		onKeyUp: function (event) {
+		   var keyCode = event.keyCode;
+		   if (keyCode >= 37 && keyCode <= 40) {
+			   event.preventDefault();
+			   this._keydown = false;
+		   }
+		},
+		
+		onKeyArrowPress: function (event) {
+		   if (this._keydown) {
+			   var keyCode = event.detail? event.detail.keyCode:null;
+			   var offset = 3;
+			   var pressDelay = 50;
+			   var element = this.element;
+			   event.preventDefault();
+			   switch (keyCode) {
+				   //Arrow left
+				   case 37: this._lon -= offset;
+					   break;
+				   //Arrow right
+				   case 39: this._lon += offset;
+					   break;
+				   //Arrow up
+				   case 38: this._lat += offset;
+					   break;
+				   //Arrow down
+				   case 40: this._lat -= offset;
+					   break;
+			   }
+			   setTimeout(function () {
+				   var pressEvent = document.createEvent('CustomEvent');
+				   pressEvent.initCustomEvent("keyArrowPress",true,true,{'keyCode':keyCode});
+				   element.dispatchEvent(pressEvent);
+			   },
+			   pressDelay);
+		   }
+	    },
 
         animate: function() {
             // set our animate function to fire next time a frame is ready
@@ -407,6 +556,9 @@ three.js r65 or higher
 
             if( this._isVideo ) {
                 if ( this._video.readyState === this._video.HAVE_ENOUGH_DATA) {
+					if(this._videocanvas) {
+                        this._videocanvas.getContext('2d').drawImage(this._video, 0, 0, this._videocanvas.width, this._videocanvas.height);
+                    }
                     if(typeof(this._texture) !== "undefined" ) {
                         var ct = new Date().getTime();
                         if(ct - this._time >= 30) {
@@ -492,6 +644,24 @@ three.js r65 or higher
             this._renderer.setSize(w, h);
             this._camera.aspect = w / h;
             this._camera.updateProjectionMatrix();
+        },
+		
+		showWaiting: function () {
+			var loading = $(this.element).find('.loading');
+            loading.find('.waiting-icon').show();
+            loading.find('.error-icon').hide();
+            loading.show();
+        },
+
+        hideWaiting: function () {
+            $(this.element).find('.loading').hide();
+        },
+
+        showError: function () {
+			var loading = $(this.element).find('.loading');
+            loading.find('.waiting-icon').hide();
+            loading.find('.error-icon').show();
+            loading.show();
         },
 
         destroy: function() {
