@@ -232,14 +232,13 @@ three.js r65 or higher
                         var percent = this.currentTime * 100 / this.duration;
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
                         $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
-						
 						//Update time label
 						var durMin = Math.floor(this.duration / 60);
 						var durSec = Math.floor(this.duration - (durMin * 60));
 						var timeMin = Math.floor(this.currentTime / 60);
 						var timeSec = Math.floor(this.currentTime - (timeMin * 60));
-						var duration = (durMin < 10 ? '0' + durMin : durMin) + ':' + (durSec < 10 ? '0' + durSec : durSec);
-						var currentTime = (timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec);
+						var duration = durMin + ':' + (durSec < 10 ? '0' + durSec : durSec);
+						var currentTime = timeMin + ':' + (timeSec < 10 ? '0' + timeSec : timeSec);
 						$(self.element).find('.controls .timeLabel').html(currentTime+' / '+duration);
                     }
                 });
@@ -477,20 +476,22 @@ three.js r65 or higher
                 var percent =  this.relativeX / $(this.element).find('canvas').width() * 100;
                 $(this.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[0].setAttribute("style", "width:" + percent + "%;");
                 $(this.element).find('.controlsWrapper > .valiant-progress-bar')[0].children[1].setAttribute("style", "width:" + (100 - percent) + "%;");
-                this._video.currentTime = parseInt(this._video.duration * percent / 100);
+                this._video.currentTime = this._video.duration * percent / 100;
             }
         },
 		
 		onProgressMouseMove: function(event){
-			var percent = (100 / $(this.element).find('canvas').width()) * event.offsetX;
+			var percent =  this.relativeX / $(this.element).find('canvas').width() * 100;
 			if(percent){
 				var tooltip = $(this.element).find('.timeTooltip');
-				tooltip.css({ left: (event.clientX - $(this.element).offset().left - (tooltip.width()/2)) + 'px' });
+				var tooltipLeft = (this.relativeX - (tooltip.width()/2));
+				tooltipLeft = tooltipLeft <0? 0:Math.min(tooltipLeft,$(this.element).find('canvas').width() - tooltip.outerWidth());
+				tooltip.css({ left: tooltipLeft + 'px' });
 				tooltip.show();
 				var time = (percent / 100) * this._video.duration;
 				var timeMin = Math.floor(time / 60);
 				var timeSec = Math.floor(time - (timeMin * 60));
-				tooltip.html((timeMin < 10 ? '0' + timeMin : timeMin) + ':' + (timeSec < 10 ? '0' + timeSec : timeSec));
+				tooltip.html(timeMin + ':' + (timeSec < 10 ? '0' + timeSec : timeSec));
 			}
 		},
 		
