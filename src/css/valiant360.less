@@ -47,12 +47,11 @@
 		font-size: 50%;
 		padding: 0 10px;
 		.button {
-			width: 50px;
+			width: 40px;
 			text-align: center;
 			margin: 0;
 			padding: 0;
 			line-height: 40px;
-			padding: 0 .1em;
 			opacity: .5;
 			font-size: 3em;
 			color: #fff;
@@ -69,7 +68,70 @@
 			color: #fff;
 			font-size: 2em;
 			height: 100%;
+			line-height:40px;
+			padding:0 10px;
 		}
+		
+		.audioControl{
+			display: inline-block;
+		}
+
+		.audioControl:hover{
+			padding-right:10px;
+			.volumeControl{
+				width:80px;
+				.volumeCursor{
+					display:block;
+				}
+			}
+		}
+		
+		.volumeControl:hover {
+			opacity: 1;
+			width:80px;
+		}
+		
+		.volumeControl{
+			width: 0;
+			height:26px;
+			position:relative;
+			top:5px;
+			opacity: .5;
+			display: inline-block;
+			cursor:pointer;
+			.transition(all .25s ease-in-out);
+			.volumeBar{
+				position:absolute;
+				top:11px;
+				.volumeProgress {
+					height: 4px;
+					width: 100%;
+					position:absolute;
+					background-color: #fff;
+				}
+				.volumeCursor{
+					height: 12px;
+					width: 12px;
+					display:none;
+					border-radius:50%;
+					background-color: #fff;
+					position:absolute;
+					right:-6px;
+					top:-4px;
+				}
+			}
+		}
+		
+		.volumeControl:before {
+			content:'';
+			width:100%;
+			background-color: #444;
+			height: 4px;
+			width: 100%;
+			position:absolute;
+			top:11px;
+		}
+		
 	}	
 	.loading {
 		position: absolute;

@@ -258,8 +258,7 @@ three.js r65 or higher
 					this._texture = new THREE.Texture( this._video );
 				}
 
-                // set the video src and begin loading
-                // force caching of the video to solve rendering errors for big video file
+                //force browser caching of the video to solve rendering errors with big videos
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', $(this.element).attr('data-video-src'), true);
                 xhr.responseType = 'blob';
@@ -275,6 +274,7 @@ three.js r65 or higher
                             }
                         });
 
+						// set the video src and begin loading
                         self._video.src = vid;
                     }
                 };
@@ -307,8 +307,16 @@ three.js r65 or higher
                 </div>\
                 <div class="controls"> \
                     <a href="#" class="playButton button fa '+ playPauseControl +'"></a> \
-                    <a href="#" class="muteButton button fa '+ muteControl +'"></a> \
-					<span class="timeLabel">00:00</span> \
+					<div class="audioControl">\
+						<a href="#" class="muteButton button fa '+ muteControl +'"></a> \
+						<div class="volumeControl">\
+							<div class="volumeBar">\
+								<div class="volumeProgress"></div>\
+								<div class="volumeCursor"></div>\
+							</div>\
+						</div>\
+					</div>\
+					<span class="timeLabel"></span> \
                     <a href="#" class="fullscreenButton button fa fa-expand"></a> \
                 </div> \
               </div>\
@@ -409,7 +417,13 @@ three.js r65 or higher
                 }
             });
 
+			$(this.element).find('.controlsWrapper .volumeControl')
+				.mousedown(this.onVolumeMouseDown.bind(this))
+				.mouseup(this.onVolumeMouseUp.bind(this))
+				.mouseleave(this.onVolumeMouseUp.bind(this))
+				.mousemove(this.onVolumeMouseMove.bind(this));
 			
+			$(this._video).on('volumechange',this.onVolumeChange.bind(this));
         },
 
         onMouseMove: function(event) {
@@ -551,6 +565,40 @@ three.js r65 or higher
 			   pressDelay);
 		   }
 	    },
+		
+		onVolumeMouseDown: function(event){
+			event.preventDefault();
+			this._volumeMouseDown = true;
+			this.onVolumeMouseMove(event);
+		},
+		
+		onVolumeMouseUp: function(event){
+			event.preventDefault();
+			this._volumeMouseDown = false;
+		},
+		
+		onVolumeMouseMove: function(event){
+			event.preventDefault();
+			if(this._volumeMouseDown){
+				var volumeControl = $(this.element).find('.controlsWrapper .volumeControl');
+				var percent =  (this.relativeX - volumeControl.offset().left + (volumeControl.find('.volumeBar > .volumeCursor').width()/2)) / volumeControl.width() * 100;
+				if(percent>=0 && percent<=100){
+					this._video.volume = percent/100;
+				}
+			}
+		},
+		
+		onVolumeChange: function(event){
+			//change volume cursor value
+			var percent = this._video.muted==true && !this._volumeMouseDown? 0:(this._video.volume * 100);			
+			$(this.element).find('.controlsWrapper .volumeControl > .volumeBar').css({width: percent+"%"});
+			
+			//change mute button
+			var muteButton = $(this.element).find(".muteButton");
+			if((percent>0 && muteButton.hasClass('fa-volume-off')) || (percent==0 && muteButton.hasClass('fa-volume-up'))){
+				muteButton.click();
+			}
+		},
 
         animate: function() {
             // set our animate function to fire next time a frame is ready

@@ -37,15 +37,17 @@ More detailed api documentation pending, for now the below explains about all yo
 	$('.valiantContainer').Valiant360({
 		crossOrigin: 'anonymous',	// valid keywords: 'anonymous' or 'use-credentials'
 		clickAndDrag: false,	// use click-and-drag camera controls
+		keyboardControls: true, // use keyboard controls (move by arrows)
 		flatProjection: false,	// map image to appear flat (often more distorted)
 		fov: 35, 				// initial field of view
 		fovMin: 3, 				// min field of view allowed
-		fovMax: 100, 				// max field of view allowed
+		fovMax: 100, 			// max field of view allowed
 		hideControls: false,	// hide player controls
 		lon: 0, 				// initial lon for camera angle
 		lat: 0, 				// initial lat for camera angle
 		loop: "loop", 			// video loops by default
 		muted: true,			// video muted by default
+		volume: 0.5,			// video volume by default
 		autoplay: true			// video autoplays by default
 	});
 
