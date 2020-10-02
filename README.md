@@ -37,6 +37,7 @@ More detailed api documentation pending, for now the below explains about all yo
 	$('.valiantContainer').Valiant360({
 		crossOrigin: 'anonymous',	// valid keywords: 'anonymous' or 'use-credentials'
 		clickAndDrag: false,	// use click-and-drag camera controls
+		disableZoom: false		// disable zooming on the video
 		keyboardControls: true, // use keyboard controls (move by arrows)
 		flatProjection: false,	// map image to appear flat (often more distorted)
 		fov: 35, 				// initial field of view
