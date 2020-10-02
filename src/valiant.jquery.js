@@ -48,6 +48,7 @@ three.js r65 or higher
         defaults = {
             crossOrigin: 'anonymous',
             clickAndDrag: false,
+            disableZoom: false,
 			keyboardControls: true,
             fov: 35,
             fovMin: 3,
@@ -457,6 +458,10 @@ three.js r65 or higher
         onMouseWheel: function(event) {
 
             var wheelSpeed = -0.01;
+
+            if(this.options.disableZoom) {
+                return;
+            }
 
             // WebKit
             if ( event.wheelDeltaY ) {
