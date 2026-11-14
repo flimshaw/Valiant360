@@ -339,34 +339,44 @@ three.js r65 or higher
             // create a self var to pass to our controller functions
             var self = this;
 
-            this.element.addEventListener( 'mousemove', this.onMouseMove.bind(this), false );
-            this.element.addEventListener( 'touchmove', this.onMouseMove.bind(this), false );
-            this.element.addEventListener( 'mousewheel', this.onMouseWheel.bind(this), false );
-            this.element.addEventListener( 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
-            this.element.addEventListener( 'mousedown', this.onMouseDown.bind(this), false);
-            this.element.addEventListener( 'touchstart', this.onMouseDown.bind(this), false);
-            this.element.addEventListener( 'mouseup', this.onMouseUp.bind(this), false);
-            this.element.addEventListener( 'touchend', this.onMouseUp.bind(this), false);
+            // record every listener we register so destroy() can remove it again
+            var listeners = this._listeners = [];
+            var addListener = function(target, type, handler, options) {
+                target.addEventListener(type, handler, options);
+                listeners.push([target, type, handler, options]);
+            };
+
+            addListener( this.element, 'mousemove', this.onMouseMove.bind(this), false );
+            addListener( this.element, 'touchmove', this.onMouseMove.bind(this), false );
+            addListener( this.element, 'mousewheel', this.onMouseWheel.bind(this), false );
+            addListener( this.element, 'DOMMouseScroll', this.onMouseWheel.bind(this), false );
+            addListener( this.element, 'mousedown', this.onMouseDown.bind(this), false);
+            addListener( this.element, 'touchstart', this.onMouseDown.bind(this), false);
+            addListener( this.element, 'mouseup', this.onMouseUp.bind(this), false);
+            addListener( this.element, 'touchend', this.onMouseUp.bind(this), false);
 			
 			if(this.options.keyboardControls){
-				this.element.addEventListener('keydown',this.onKeyDown.bind(this), false);
-                this.element.addEventListener('keyup',this.onKeyUp.bind(this), false);
+				addListener(this.element, 'keydown',this.onKeyDown.bind(this), false);
+                addListener(this.element, 'keyup',this.onKeyUp.bind(this), false);
 				// Used custom press event because for the arrow buttons is not throws the 'keypress' event
-                this.element.addEventListener('keyArrowPress',this.onKeyArrowPress.bind(this), false);
-				this.element.addEventListener('click',function () {
+                addListener(this.element, 'keyArrowPress',this.onKeyArrowPress.bind(this), false);
+				addListener(this.element, 'click',function () {
                                 $(self.element).focus();
                             },false);
 			}
 
-            $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("click", this.onProgressClick.bind(this), false);
-			$(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("mousemove", this.onProgressMouseMove.bind(this), false);
-			$(self.element).find('.controlsWrapper > .valiant-progress-bar')[0].addEventListener("mouseout", this.onProgressMouseOut.bind(this), false);
+            var progressBar = $(self.element).find('.controlsWrapper > .valiant-progress-bar')[0];
+            addListener( progressBar, "click", this.onProgressClick.bind(this), false);
+			addListener( progressBar, "mousemove", this.onProgressMouseMove.bind(this), false);
+			addListener( progressBar, "mouseout", this.onProgressMouseOut.bind(this), false);
 
-            $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange',this.fullscreen.bind(this));
+            this._fullscreenHandler = this.fullscreen.bind(this);
+            $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange', this._fullscreenHandler);
 
-            $(window).resize(function() {
+            this._resizeHandler = function() {
                 self.resizeGL($(self.element).width(), $(self.element).height());
-            });
+            };
+            $(window).resize(this._resizeHandler);
 
             // Player Controls
             $(this.element).find('.playButton').click(function(e) {
@@ -717,6 +727,24 @@ three.js r65 or higher
         destroy: function() {
             window.cancelAnimationFrame(this._requestAnimationId);
             this._requestAnimationId = '';
+
+            // unbind the listeners we registered, otherwise a destroyed player
+            // keeps reacting to input and global events (and throws, since its
+            // canvas is gone)
+            if(this._listeners) {
+                for(var i = 0; i < this._listeners.length; i++) {
+                    var listener = this._listeners[i];
+                    listener[0].removeEventListener(listener[1], listener[2], listener[3]);
+                }
+                this._listeners = [];
+            }
+            if(this._fullscreenHandler) {
+                $(document).off('webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange', this._fullscreenHandler);
+            }
+            if(this._resizeHandler) {
+                $(window).off('resize', this._resizeHandler);
+            }
+
             this._texture.dispose();
             this._scene.remove(this._mesh);
             if(this._isVideo) {
