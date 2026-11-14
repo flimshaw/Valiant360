@@ -426,11 +426,20 @@ three.js r65 or higher
 			$(this._video).on('volumechange',this.onVolumeChange.bind(this));
         },
 
-        onMouseMove: function(event) {
-            this._onPointerDownPointerX = event.clientX;
-            this._onPointerDownPointerY = -event.clientY;
+        // touch events carry their coordinates on touches[0]; reading pageX/clientX
+        // straight off the event yielded undefined and produced NaN camera angles
+        getPointer: function(event) {
+            return (event.touches && event.touches.length) ? event.touches[0] : event;
+        },
 
-            this.relativeX = event.pageX - $(this.element).find('canvas').offset().left;
+        onMouseMove: function(event) {
+            var pointer = this.getPointer(event);
+            if(event.touches) { event.preventDefault(); }
+
+            this._onPointerDownPointerX = pointer.clientX;
+            this._onPointerDownPointerY = -pointer.clientY;
+
+            this.relativeX = pointer.pageX - $(this.element).find('canvas').offset().left;
 
             this._onPointerDownLon = this._lon;
             this._onPointerDownLat = this._lat;
@@ -439,16 +448,16 @@ three.js r65 or higher
 
             if(this.options.clickAndDrag) {
                 if(this._mouseDown) {
-                    x = event.pageX - this._dragStart.x;
-                    y = event.pageY - this._dragStart.y;
-                    this._dragStart.x = event.pageX;
-                    this._dragStart.y = event.pageY;
+                    x = pointer.pageX - this._dragStart.x;
+                    y = pointer.pageY - this._dragStart.y;
+                    this._dragStart.x = pointer.pageX;
+                    this._dragStart.y = pointer.pageY;
                     this._lon += x;
                     this._lat -= y;
                 }
             } else {
-                x = event.pageX - $(this.element).find('canvas').offset().left;
-                y = event.pageY - $(this.element).find('canvas').offset().top;
+                x = pointer.pageX - $(this.element).find('canvas').offset().left;
+                y = pointer.pageY - $(this.element).find('canvas').offset().top;
                 this._lon = ( x / $(this.element).find('canvas').width() ) * 430 - 225;
                 this._lat = ( y / $(this.element).find('canvas').height() ) * -180 + 90;
             }
@@ -480,9 +489,10 @@ three.js r65 or higher
         },
 
         onMouseDown: function(event) {
+            var pointer = this.getPointer(event);
             this._mouseDown = true;
-            this._dragStart.x = event.pageX;
-            this._dragStart.y = event.pageY;
+            this._dragStart.x = pointer.pageX;
+            this._dragStart.y = pointer.pageY;
         },
 
         onProgressClick: function(event) {
