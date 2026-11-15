@@ -670,6 +670,12 @@ three.js r65 or higher
         },
         loadPhoto: function(photoFile) {
             this._texture = THREE.ImageUtils.loadTexture( photoFile );
+            // the mesh was built with a reference to the previous texture, so
+            // point the material at the new one or nothing appears to change
+            if(this._mesh) {
+                this._mesh.material.map = this._texture;
+                this._mesh.material.needsUpdate = true;
+            }
         },
 
         fullscreen: function() {
