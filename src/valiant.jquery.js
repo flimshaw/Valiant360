@@ -107,8 +107,10 @@ three.js r65 or higher
             this._fov = this.options.fov;
 
             // save our original height and width for returning from fullscreen
-            this._originalWidth = $(this.element).find('canvas').width();
-            this._originalHeight = $(this.element).find('canvas').height();
+            // capture the container size; the renderer canvas is not created yet,
+            // so reading a canvas here always yielded null and broke fullscreen exit
+            this._originalWidth = $(this.element).width();
+            this._originalHeight = $(this.element).height();
 
             // add a class to our element so it inherits the appropriate styles
             $(this.element).addClass('Valiant360_default');
