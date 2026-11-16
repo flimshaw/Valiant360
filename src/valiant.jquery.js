@@ -267,8 +267,11 @@ three.js r65 or higher
                         var vid = (window.webkitURL ? webkitURL : URL).createObjectURL(this.response);
                         //Video Play Listener, fires after video loads
                         $(self._video).bind("canplaythrough", function () {
+                            // the video is ready to show either way; only the autoplay
+                            // is conditional, otherwise the loading overlay covered the
+                            // player forever when autoplay was disabled
+                            self.hideWaiting();
                             if (self.options.autoplay === true) {
-                                self.hideWaiting();
                                 self.play();
                                 self._videoReady = true;
                             }
